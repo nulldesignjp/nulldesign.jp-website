@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0">
+<meta name="description" content="GPGPU / Curl Noise">
+<meta name="keywords" content="">
+<title>untitled</title>
+<style>
+html,body{height: 100%;overflow: hidden;}
+body{margin: 0;padding: 0;background: #000;}
+</style>
+</head>
+<body>
+<div id="container"></div>
+
+
+        <script id="computeShaderPosition" type="x-shader/x-fragment">
+
+            #define delta ( 1.0 / 60.0 )
+
+            void main() {
+
+                vec2 uv = gl_FragCoord.xy / resolution.xy;
+
+                vec4 tmpPos = texture2D( texturePosition, uv );
+                vec3 pos = tmpPos.xyz;
+
+                vec4 tmpVel = texture2D( textureVelocity, uv );
+                vec3 vel = tmpVel.xyz;
+                float mass = tmpVel.w;
+
+                if( length( pos ) > 600.0 )
+                {
+                    //pos = vec3(0.0);
+                    pos *= -0.99;
+                }
+
+                // Dynamics
+                pos += vel * delta;
+                //pos *= 0.99;
+
+                gl_FragColor = vec4( pos, 1.0 );
+
+            }
+
+        </script>
+
+        <!-- Fragment shader for protoplanet's velocity -->
+        <script id="computeShaderVelocity" type="x-shader/x-fragment">
+
+            // For PI declaration:
+            #include <common>
+
+            #define delta ( 1.0 / 60.0 )
+
+            uniform float time;
+            uniform float scale;
+            uniform float speed;
+            uniform float slow;
+            uniform float offsetX;
+            uniform float offsetY;
+
+            const float width = resolution.x;
+            const float height = resolution.y;
+
+
+            const int   oct  = 8;
+            const float per  = 0.5;
+            //const float PI   = 3.1415926;
+            const float cCorners = 1.0 / 16.0;
+            const float cSides   = 1.0 / 8.0;
+            const float cCenter  = 1.0 / 4.0;
+
+            // 補間関数
+            float interpolate(float a, float b, float x){
+                float f = (1.0 - cos(x * PI)) * 0.5;
+                return a * (1.0 - f) + b * f;
+            }
+
+            // 乱数生成
+            float rnd(vec2 p){
+                return fract(sin(dot(p ,vec2(12.9898,78.233))) * 43758.5453);
+            }
+
+            // 補間乱数
+            float irnd(vec2 p){
+                vec2 i = floor(p);
+                vec2 f = fract(p);
+                vec4 v = vec4(rnd(vec2(i.x,       i.y      )),
+                              rnd(vec2(i.x + 1.0, i.y      )),
+                              rnd(vec2(i.x,       i.y + 1.0)),
+                              rnd(vec2(i.x + 1.0, i.y + 1.0)));
+                return interpolate(interpolate(v.x, v.y, f.x), interpolate(v.z, v.w, f.x), f.y);
+            }
+
+            // ノイズ生成
+            float noise(vec2 p){
+                float t = 0.0;
+                for(int i = 0; i < oct; i++){
+                    float freq = pow(2.0, float(i));
+                    float amp  = pow(per, float(oct - i));
+                    t += irnd(vec2(p.x / freq, p.y / freq)) * amp;
+                }
+                return t;
+            }
+
+            // シームレスノイズ生成
+            float snoise(vec2 p, vec2 q, vec2 r){
+                return noise(vec2(p.x,       p.y      )) *        q.x  *        q.y  +
+                       noise(vec2(p.x,       p.y + r.y)) *        q.x  * (1.0 - q.y) +
+                       noise(vec2(p.x + r.x, p.y      )) * (1.0 - q.x) *        q.y  +
+                       noise(vec2(p.x + r.x, p.y + r.y)) * (1.0 - q.x) * (1.0 - q.y);
+            }
+
+            // rotate
+            vec3 rotate(vec3 p, float angle, vec3 axis){
+                vec3 a = normalize(axis);
+                float s = sin(angle);
+                float c = cos(angle);
+                float r = 1.0 - c;
+                mat3 m = mat3(
+                    a.x * a.x * r + c,
+                    a.y * a.x * r + a.z * s,
+                    a.z * a.x * r - a.y * s,
+                    a.x * a.y * r - a.z * s,
+                    a.y * a.y * r + c,
+                    a.z * a.y * r + a.x * s,
+                    a.x * a.z * r + a.y * s,
+                    a.y * a.z * r - a.x * s,
+                    a.z * a.z * r + c
+                );
+                return m * p;
+            }
+
+
+            void main() {
+
+                vec2 uv = gl_FragCoord.xy / resolution.xy;
+                float idParticle = uv.y * resolution.x + uv.x;
+
+                vec4 tmpPos = texture2D( texturePosition, uv );
+                vec3 pos = tmpPos.xyz;
+
+                vec4 tmpVel = texture2D( textureVelocity, uv );
+                vec3 vel = tmpVel.xyz;
+                //float mass = tmpVel.w;
+
+                pos.x += offsetX;
+                pos.y += offsetY;
+
+                pos.x += time * 10.0;
+
+
+                float _px = ( noise( pos.yz * scale ) - 0.5 ) * speed;
+                float _py = ( noise( pos.zx * scale ) - 0.5 ) * speed;
+                float _pz = ( noise( pos.xy * scale ) - 0.5 ) * speed;
+                vel += vec3( _px, _py, _pz );
+
+                //  固定化防止
+                _px = ( noise( pos.yz * scale * 1000.0 ) - 0.5 ) * speed * 0.2;
+                _py = ( noise( pos.zx * scale * 1000.0 ) - 0.5 ) * speed * 0.2;
+                _pz = ( noise( pos.xy * scale * 1000.0 ) - 0.5 ) * speed * 0.2;
+                vel += vec3( _px, _py, _pz );
+
+                vel *= slow;
+
+                vel += ( vec3(0.0) - pos ) * 0.02;
+                vel = rotate( vel, 0.025, vec3( 1.0, 1.0, 0.0 ) );
+
+                gl_FragColor = vec4( vel, 1.0 );
+
+            }
+
+        </script>
+
+<script type="x-shader/x-vertex" id="vertexshader">
+
+    #include <common>
+
+    uniform sampler2D texturePosition;
+    uniform sampler2D textureVelocity;
+
+    varying vec3 vPos;
+
+	void main()
+	{
+
+        vec4 posTemp = texture2D( texturePosition, uv );
+        vec3 pos = posTemp.xyz;
+        vec4 velTemp = texture2D( textureVelocity, uv );
+        vec3 vel = velTemp.xyz;
+        float mass = velTemp.w;
+        vPos = pos;
+
+        vec4 mvPosition = modelViewMatrix * vec4( pos, 1.0 );
+        gl_PointSize = 8.0 * (100.0 / length(mvPosition.xyz));
+		gl_Position = projectionMatrix * modelViewMatrix * vec4( pos, 1.0 );
+	}
+</script>
+<script type="x-shader/x-fragment" id="fragmentshader">
+    uniform float time;
+    varying vec3 vPos;
+	void main()
+	{
+		vec2 uv = normalize( gl_FragCoord.xy );
+		float opacity = length( vPos ) / 600.0;
+		gl_FragColor = vec4( uv, sin( time * 0.2 ) * 0.5 + 0.5, 1.0 );
+	}
+</script>
+<script type="text/javascript" src="dat.gui.min.js"></script>
+<script type="text/javascript" src="three.min.js"></script>
+<script type="text/javascript" src="TweenMax.min.js"></script>
+<script type="text/javascript" src="stats.min.js"></script>
+<script type="text/javascript" src="OrbitControls.js"></script>
+<script type="text/javascript" src="GPUComputationRenderer.js"></script>
+<script type="text/javascript" src="engine.js"></script>
+</body>
+</html>

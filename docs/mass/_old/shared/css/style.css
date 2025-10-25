@@ -1,0 +1,153 @@
+/*
+	style.css
+*/
+
+body{
+	margin: 0;
+	padding: 0;
+	text-align: center;
+	font-size: 87.5%;
+	background-color: #000;
+	font-family: monospace;
+	-webkit-text-size-adjust:none;
+	/*box-sizing: border-box;*/
+}
+
+h1,h2,h3,h4,h5,h6{
+	font-weight: normal;
+}
+
+h1,h2,h3,h4,h5,h6,p,blockquote,
+ol,ul,dl,li,dt,dd,
+table,thead,tbody,tfoot,tr,th,td,
+form,input,textarea{
+	margin: 0;
+	padding: 0;
+	font-size: 1.0em;
+	line-height: 1;
+}
+
+img{
+	vertical-align: bottom;
+}
+
+a{
+	text-decoration: none;
+	color: #333;
+}
+a:hover{};
+
+a img{
+	border: none;
+}
+
+a span{
+	position: fixed;
+	left: -9999px;
+	top: -9999px;
+}
+
+article, section, aside, time, audio, video{
+	display: block;
+}
+
+.clearfix:after {
+    content: "."; 
+    display: block; 
+    height: 0; 
+    clear: both; 
+    visibility: hidden;
+}
+.clearfix {display: inline-block;}
+/* Hides from IE-mac ﾂ･*/
+* html .clearfix {height: 1%;}
+.clearfix {display: block;}
+/* End hide from IE-mac */
+
+
+h1{
+	width: 129px;
+	height: 36px;
+	background: no-repeat left top url(../img/logo_mass01.png);
+}
+
+h1 span{
+	position: fixed;
+	left: -9999px;
+	top: -9999px;
+}
+
+#selectModeBlock{
+	position: fixed;
+	right:32px;
+	top:32px;
+	z-index:1000;
+	font-family:Arial;
+	color:#FFF;
+	font-size:12px;
+	font-weight: bold;
+	display: none;
+}
+#selectModeBlock a{
+	color:#FFF;
+	text-decoration:none;
+	opacity:0.4;
+}
+#selectModeBlock a.current{
+	opacity: 1.0;
+}
+#selectModeBlock a:hover{
+	opacity:0.4;
+}
+#selectModeBlock span{
+	font-size: 10px;
+	vertical-align:middle;
+	opacity: 0.8;
+}
+#siteHead{
+	position: fixed;
+	left: 32px;
+	top: 32px;
+	z-index:500;
+	color: #FFF;
+}
+#siteHead h1{
+	margin: 0;
+	padding: 0;
+	line-height: 1.0;
+	font-size: 28px;
+}
+#siteFoot{}
+#snsBlock{
+	position: fixed;
+	right: 24px;
+	bottom: 20px;
+	z-index:500;
+	text-align: right;
+	display: none;
+}
+#copyright{
+	position: fixed;
+	left: 32px;
+	bottom: 24px;
+	z-index:500;
+	color: #FFF;
+	font-family: Verdana, Arial;
+	font-size: 9px;
+	opacity: 0.8;
+}
+
+.introHide{opacity: 0;}
+.fadeIn{
+	-webkit-animation: resizeFadeIn 1.0s ease 0s;
+	-moz-animation: resizeFadeIn 1.0s ease 0s;
+	opacity: 1.0 !important;
+}
+@-webkit-keyframes resizeFadeIn {
+	0% {	opacity: 0.0;	}
+	100% {	opacity: 1.0;	}
+}
+@-moz-keyframes resizeFadeIn {
+	0% {	opacity: 0.0;	}
+	100% {	opacity: 1.0;	}
+}

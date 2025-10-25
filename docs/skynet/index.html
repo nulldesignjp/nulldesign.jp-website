@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Language" content="ja">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<meta http-equiv="imagetoolbar" content="no">
+<meta http-equiv="cleartype" content="on">
+<meta name="format-detection" content="telephone=no">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=10.0,user-scalable=yes,viewport-fit=cover">
+<meta name="keywords" content="">
+<meta name="description" content="SkyNet is a project to visualize aviation information in Japan. Based on the flight schedule obtained in real time, we simulate the current Japanese sky situation.　SkyNetは日本における航空情報を視覚化するプロジェクトです。リアルタイムに取得したフライトスケジュールをもとに、アクセス時点での日本上空をシミュレートしています。">
+<meta name="twitter:image:src" content="https://nulldesign.jp/skynet/shared/img/ogp_tw.png"> 
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="nulldesign.jp">
+<meta name="twitter:creator" content="nulldesign">
+<meta name="twitter:title" content="SkyNet"> 
+<meta name="twitter:description" content="SkyNet is a project to visualize aviation information in Japan. Based on the flight schedule obtained in real time, we simulate the current Japanese sky situation.　SkyNetは日本における航空情報を視覚化するプロジェクトです。リアルタイムに取得したフライトスケジュールをもとに、アクセス時点での日本上空をシミュレートしています。">
+<meta property="og:title" content="SkyNet">
+<meta property="og:site_name" content="nulldesign.jp">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://nulldesign.jp/skynet/shared/img/ogp_sns.png"/>
+<meta property="og:url" content="https://nulldesign.jp/skynet/">
+<meta property="og:description" content="SkyNet is a project to visualize aviation information in Japan. Based on the flight schedule obtained in real time, we simulate the current Japanese sky situation.　SkyNetは日本における航空情報を視覚化するプロジェクトです。リアルタイムに取得したフライトスケジュールをもとに、アクセス時点での日本上空をシミュレートしています。">
+<link rel="apple-touch-icon" href="shared/img/icon-152x152.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucen">
+<meta name="apple-mobile-web-app-title" content="SkyNet">
+<meta name="theme-color" content="#000000">
+<link rel="manifest" href="manifest.json">
+<link href="https://fonts.googleapis.com/css?family=EB+Garamond" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Heebo:100,400&display=swap&subset=hebrew" rel="stylesheet">
+<link href="shared/css/reset.css" rel="stylesheet" type="text/css" media="all">
+<link href="shared/css/style.css" rel="stylesheet" type="text/css" media="all">
+<title>SkyNet</title>
+</head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DBF3XPFL67"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-DBF3XPFL67');
+</script>
+<body>
+<div id="fb-root"></div>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/ja_JP/sdk.js#xfbml=1&version=v3.3&appId=1992379917533503&autoLogAppEvents=1"></script>
+<div id="container">
+<div id="siteHead">
+<h1>SkyNet</h1>
+<h2>RealTime Japanese Sky Traffic Visualization.</h2>
+<!--/ siteHead --></div>
+<div id="siteBody">
+<div id="webglView"><!--/ webglView --></div>
+<!--/ siteBody --></div>
+<div id="siteFoot">
+<p>&copy; nulldesign.jp</p>
+<ul class="snsBlock01">
+<li id="tli"><a href="https://twitter.com/share" class="twitter-share-button" data-url="https://nulldesign.jp/skynet/" data-text="SkyNet, RealTime Japanese Sky Traffic Visualization." data-count="none">Tweet</a> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script></li>
+<li><a href="http://b.hatena.ne.jp/entry/https://nulldesign.jp/skynet/" class="hatena-bookmark-button" data-hatena-bookmark-title="SkyNet, RealTime Japanese Sky Traffic Visualization." data-hatena-bookmark-layout="simple" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script></li>
+<li class="fb"><div class="fb-share-button" data-href="https://nulldesign.jp/skynet/" data-layout="button_count" data-size="small"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fnulldesign.jp%2Fskynet%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a></div></li>
+</ul>
+<!--/ siteFoot --></div>
+<!--/ container --></div>
+<div id="letterInfo">
+<div id="letter"><!--/ letter --></div>
+<div id="letter_ja"><!--/ letter_ja --></div>
+<div id="letter_en"><!--/ letter_en --></div>
+<!--/ letterInfo --></div>
+<time id="currentDate"></time>
+<time id="currentTime"></time>
+<div id="loading"></div>
+<div id="loadingMessage">Initialize Start....</div>
+<div id="nav">
+<div id="navInner">
+<ul>
+<li>
+<h2>About</h2>
+<p class="en">SkyNet is a project to visualize aviation information in Japan. Based on the flight schedule obtained in real time, we simulate the current Japanese sky situation.</p>
+<p class="ja">SkyNetは日本における航空情報を視覚化するプロジェクトです。リアルタイムに取得したフライトスケジュールをもとに、アクセス時点での日本上空をシミュレートしています。</p>
+</li>
+
+<li>
+<ul>
+<li><h2>Time Scale <span id="timeScaleView"></span></h2>
+<input type="RANGE" name="slider01" class="NDSlider" id="slider01" min="1" max="3600"></li></li>
+<li><h2>Reset</h2>
+<button id="resetButton">ResetTime</button>
+</li>
+</ul>
+</li>
+
+<li>
+<ul style="margin-top: 2em;">
+<li><h2>Works Cited</h2>
+<p style="font-size: 0.75em"><a href="https://tokyochallenge.odpt.org" target="_blank" rel="noreferrer">東京公共交通オープンデータチャレンジ</a></p>
+<p style="font-size: 0.75em"><a href="http://nlftp.mlit.go.jp" target="_blank" rel="noreferrer">国土交通省国土政策局「国土数値情報（海岸線データ）」</a></p>
+</li>
+</ul>
+</li>
+
+</ul>
+<!-- /navInner --></div>
+<!-- /nav --></div>
+<div id="menuButton"><a class="menu-trigger" href="#"><span></span><span></span><span></span></a></div>
+<div id="progress"></div>
+<script type="text/javascript" src="shared/js/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="shared/js/three.min.js"></script>
+<script type="text/javascript" src="shared/js/EffectComposers.js"></script>
+<script type="text/javascript" src="shared/js/shaders.js"></script>
+<script type="text/javascript" src="shared/js/libs.js"></script>
+<script type="text/javascript" src="shared/js/world.js"></script>
+<script type="text/javascript" src="shared/js/engine.js"></script>
+<script type="text/javascript">
+if ('serviceWorker' in navigator) {
+ navigator.serviceWorker.register('sw.js')
+  .then(
+  function (registration) {
+      // if (typeof registration.update == 'function') {
+      //     registration.update();
+      // }
+      registration.onupdatefound = function() {
+        console.log('update cache data.');
+        registration.update();
+      }
+  })
+  .catch(function (error) {
+    console.log("Error Log: " + error);
+  });
+}
+</script>
+</body>
+</html>

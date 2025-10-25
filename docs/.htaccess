@@ -1,0 +1,19 @@
+# indexの優先度
+DirectoryIndex index.html index.htm index.php
+
+# HTTPSにリダイレクト
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R,L]
+
+# wwwをwwwなしにリダイレクト
+RewriteEngine on
+RewriteCond %{HTTP_HOST} ^(www.nulldesign\.jp)(:80)?
+RewriteRule ^(.*) https://nulldesign.jp/$1 [R=301,L]
+
+# 死蔵URLのリダイレクト
+#RedirectMatch permanent /nisshi(.*) https://nulldesign.jp/
+#RedirectMatch permanent /secret(.*) https://nulldesign.jp/
+#RedirectMatch permanent /archive(.*) https://nulldesign.jp/
+#RedirectMatch permanent /archives(.*) https://nulldesign.jp/
+#RedirectMatch permanent /webgl(.*) https://nulldesign.jp/metrogram3d/

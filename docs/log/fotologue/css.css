@@ -1,0 +1,113 @@
+/*
+	css.css
+*/
+html,
+body{
+	height: 100%;
+}
+
+body{
+	margin: 0;
+	padding: 0;
+	font-family: 'EB Garamond', Georgia, "ＭＳ Ｐ明朝", "MS PMincho", "ヒラギノ明朝 Pro W3", "Hiragino Mincho Pro", serif;
+	background: #000;
+	color: #FFF;
+	font-size: 13px;
+	overflow: hidden;
+}
+h1,h2,h3,h4,h5,h6{
+	font-weight: normal;
+}
+
+h1,h2,h3,h4,h5,h6,p,blockquote,
+ul,ol,dl,li,dt,dd,
+table,tr,th,td,
+form,input,textarea{
+	margin: 0;
+	padding: 0;
+	font-size: 1em;
+	line-height: 1;
+}
+
+#container{
+	width: 100%;
+	height: 100%;
+}
+
+#siteHead{
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 40px;
+	background: #000;
+}
+
+	#siteHead h1{
+		margin: 5px 0 0 32px;
+		font-size: 24px;
+	}
+
+#siteFoot{
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	height: 20px;
+	background: #000;
+}
+
+	#siteFoot p{
+		margin: 3px 0 0 32px;
+	}
+
+.post{
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: -100;
+	text-align: center;
+}
+
+.post img{
+	display: block;
+	margin: 0 auto;
+	min-width: 100%;
+	min-height: 100%;
+}
+
+.post h2{
+	position: fixed;
+	top: 0;
+	left: 0;
+	margin: 80px 0 24px 32px;
+	font-size: 36px;
+	color: rgba(255,255,255,.8);
+	text-shadow: 0px 0px 8px #000;
+	-moz-text-shadow: 0px 0px 8px #000;　/* Firefox用 */  
+	-webkit-text-shadow: 0px 0px 8px #000;　/* Safari,Google Chrome用 */
+}
+
+.post p{
+	position: fixed;
+	top: 0;
+	left: 0;
+	margin: 128px 0 0 32px;
+	font-size: 24px;
+	color: rgba(255,255,255,.8);
+	text-shadow: 0px 0px 4px #000;
+	-moz-text-shadow: 0px 0px 4px #000;　/* Firefox用 */  
+	-webkit-text-shadow: 0px 0px 4px #000;　/* Safari,Google Chrome用 */
+}
+
+.post p.date{
+	margin: 60px 0 0 32px;
+	font-size: 16px;
+}
+
+.entry{}
+
+.fadeIn(){}
+.fadeOut(){}

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0">
+<meta name="description" content="GPGPU / Curl Noise">
+<meta name="keywords" content="">
+<title>untitled</title>
+<style>
+html,body{height: 100%;overflow: hidden;}
+body{margin: 0;padding: 0;background: #000;}
+</style>
+</head>
+<body>
+<div id="container"></div>
+<script type="text/javascript" src="dat.gui.min.js"></script>
+<script type="text/javascript" src="perlin-noise-simplex.js"></script>
+<script type="text/javascript" src="three.min.js"></script>
+<script type="text/javascript" src="TweenMax.min.js"></script>
+<script type="text/javascript" src="stats.min.js"></script>
+<script type="text/javascript" src="OrbitControls.js"></script>
+<script type="text/javascript" src="GPUComputationRenderer.js"></script>
+
+<script type="x-shader/x-vertex" id="vertexShader">
+varying vec3 pos;
+void main()
+{
+    pos = position;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+}
+</script>
+
+<script id="fragmentShader" type="x-shader/x-fragment">
+
+uniform vec2 resolution;
+uniform vec2 offset;
+uniform float scale;
+varying vec3 pos;
+
+const int   oct  = 8;
+const float per  = 0.5;
+const float PI   = 3.1415926;
+const float cCorners = 1.0 / 16.0;
+const float cSides   = 1.0 / 8.0;
+const float cCenter  = 1.0 / 4.0;
+
+// 補間関数
+float interpolate(float a, float b, float x){
+    float f = (1.0 - cos(x * PI)) * 0.5;
+    return a * (1.0 - f) + b * f;
+}
+
+// 乱数生成
+float rnd(vec2 p){
+    return fract(sin(dot(p ,vec2(12.9898,78.233))) * 43758.5453);
+}
+
+// 補間乱数
+float irnd(vec2 p){
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+    vec4 v = vec4(rnd(vec2(i.x,       i.y      )),
+                  rnd(vec2(i.x + 1.0, i.y      )),
+                  rnd(vec2(i.x,       i.y + 1.0)),
+                  rnd(vec2(i.x + 1.0, i.y + 1.0)));
+    return interpolate(interpolate(v.x, v.y, f.x), interpolate(v.z, v.w, f.x), f.y);
+}
+
+// ノイズ生成
+float noise(vec2 p){
+    float t = 0.0;
+    for(int i = 0; i < oct; i++){
+        float freq = pow(2.0, float(i));
+        float amp  = pow(per, float(oct - i));
+        t += irnd(vec2(p.x / freq, p.y / freq)) * amp;
+    }
+    return t;
+}
+
+// シームレスノイズ生成
+float snoise(vec2 p, vec2 q, vec2 r){
+    return noise(vec2(p.x,       p.y      )) *        q.x  *        q.y  +
+           noise(vec2(p.x,       p.y + r.y)) *        q.x  * (1.0 - q.y) +
+           noise(vec2(p.x + r.x, p.y      )) * (1.0 - q.x) *        q.y  +
+           noise(vec2(p.x + r.x, p.y + r.y)) * (1.0 - q.x) * (1.0 - q.y);
+}
+
+void main() {
+    float grid = 10.0;
+    float _x = pos.x - mod( pos.x, grid ) + offset.x;
+    float _y = pos.y - mod( pos.y, grid ) + offset.y;
+
+    float _val = noise( vec2( _x, _y ) * scale );
+
+    //_val = step( 0.5, _val );
+
+    gl_FragColor = vec4( vec3(_val), 1.0 );
+}
+
+</script>
+
+<script type="text/javascript">
+    
+window.onload = function(){
+
+    var stats = new Stats();
+    stats.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
+    document.body.appendChild( stats.dom );
+
+    var scene,camera,focus,renderer;
+    var _particle,_mesh,_sphere;
+    var gpuCompute;
+    var velVar, posVar;
+    var NUM = 1024;
+
+    init();
+    update();
+
+    function init()
+    {
+        var width = window.innerWidth;
+        var height = window.innerHeight;
+
+        scene = new THREE.Scene();
+        scene.fog = new THREE.Fog( 0x000000, 1600, 3200 );
+
+        focus = new THREE.Vector3();
+
+        //  camera = new THREE.OrthographicCamera( width / - 2, width / 2, height / 2, height / - 2, 1, 16000 );
+        camera = new THREE.PerspectiveCamera( 50, width / height, 0.1, 3200 );
+        camera.position.set(0, 0, 1600);
+        camera.lookAt( focus );
+
+        renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setClearColor(0x000000);
+        renderer.setSize( width, height );
+        document.getElementById('container').appendChild(renderer.domElement);
+
+        //  _controls
+        _controls = new THREE.OrbitControls( camera, renderer.domElement );
+        _controls.autoRotate = false;
+        _controls.autoRotateSpeed = 1.0;
+        _controls.enableDamping = true;
+        _controls.dampingFactor = 0.15;
+        _controls.enableZoom = false;
+        _controls.enabled = true;
+        _controls.target = focus;
+        // _controls.minDistance = 480;
+        // _controls.maxDistance = 960;
+        // _controls.minPolarAngle = 0; // radians
+        // _controls.maxPolarAngle = Math.PI * 0.5 - Math.PI / 18; // radians
+
+        var _geometry = new THREE.PlaneGeometry( 1000, 1000, 1, 1 );
+        var _material = new THREE.ShaderMaterial({
+            uniforms: {
+                scale: { value: 1.0 },
+                resolution: { value: new THREE.Vector2( window.innerWidth, window.innerHeight )},
+                offset: { value: new THREE.Vector2( Math.floor( Math.random() * 6000 ), Math.floor( Math.random() * 6000 ) )}
+            },
+            vertexShader: document.getElementById('vertexShader').textContent,
+            fragmentShader: document.getElementById('fragmentShader').textContent,
+            transparent: true,
+            blending: THREE.AdditiveBlending
+        });
+
+        var _mesh = new THREE.Mesh( _geometry, _material )
+
+        scene.add( _mesh );
+        
+
+        window.onresize = resize;
+    }
+    function update()
+    {
+        stats.begin();
+        _animationKey = window.requestAnimationFrame( update );
+        _controls.update();
+
+        camera.lookAt(focus);
+        renderer.render( scene, camera );
+        stats.end();
+    }
+    function resize()
+    {
+        var width  = window.innerWidth;
+        var height = window.innerHeight;
+        renderer.setSize( width, height );
+        if( camera.aspect )
+        {
+            camera.aspect = width / height;
+        } else {
+            camera.left = - width * 0.5;
+            camera.right = width * 0.5;
+            camera.bottom = - height * 0.5;
+            camera.top = height * 0.5;
+        }
+        
+        camera.updateProjectionMatrix();
+    }
+}
+</script>
+</body>
+</html>

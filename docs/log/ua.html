@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Language" content="ja">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<meta http-equiv="imagetoolbar" content="no">
+<meta name="keywords" content="">
+<meta name="description" content="">
+<title>user agent</title>
+</head>
+<body>
+<div id="container" style="font-size: 3em;">
+<!--/container--></div>
+<script>
+//var _ua = navigator.userAgent.toLowerCase();
+var _ua = navigator.userAgent;
+var _uaString = document.createTextNode( _ua + ' window.devicePixelRatio' + window.devicePixelRatio );
+document.getElementById('container').appendChild( _uaString );
+</script>
+</body>
+</html>

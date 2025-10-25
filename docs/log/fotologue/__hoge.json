@@ -1,0 +1,49 @@
+{
+	'appName'	:	'fotologue.js',
+	'version'	:	'1.0.0',
+	'posts'	:	
+	[
+		{
+			'title'	:	'Mariko Shinoda :Team A',
+			'date'	:	'2012.08.23',
+			'file'	:	'images/tumblr_m7vmviPyXh1qb4edwo1_500.jpg',
+			'description'	:	'今日も暑い一日が始まりました。',
+			'category'	:	'AKB'
+		},
+		{
+			'title'	:	'Mariko Shinoda :Team A',
+			'date'	:	'2012.08.23',
+			'file'	:	'images/tumblr_m7xehhmM6J1rrb63so1_500.jpg',
+			'description'	:	'おっしゃいくぞー！',
+			'category'	:	'AKB'
+		},
+		{
+			'title'	:	'Yuko Oshima:Team K',
+			'date'	:	'2012.08.24',
+			'file'	:	'images/tumblr_m8smsd5ixU1qa8ipco1_500.jpg',
+			'description'	:	'渋谷のMATOME CAFE now.',
+			'category'	:	'AKB'
+		},
+		{
+			'title'	:	'Yuko Oshima:Team K',
+			'date'	:	'2012.08.25',
+			'file'	:	'images/tumblr_m8t9ycFSr51qb5t88o1_r1_500.png',
+			'description'	:	'東京ドーム最終日でもあります。',
+			'category'	:	'AKB'
+		},
+		{
+			'title'	:	'Yuki Kashiwagi:Team B',
+			'date'	:	'2012.08.26',
+			'file'	:	'images/tumblr_m80zksJUEU1qzpypso1_500.jpg',
+			'description'	:	'思いのほかエロイ。',
+			'category'	:	'AKB'
+		},
+		{
+			'title'	:	'Yuki Kashiwagi :Team B',
+			'date'	:	'2012.08.xx',
+			'file'	:	'images/tumblr_m81etvnCZV1qcolrlo1_500.jpg',
+			'description'	:	'次はバックエンド',
+			'category'	:	'AKB'
+		}
+	]
+}

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="">
+<meta name="keywords" content="">
+
+<style>
+body{
+    text-align: center;
+}
+img{
+    width: 100%;
+    height: auto;
+}
+
+</style>
+<title>Share</title>
+</head>
+<body>
+<div id="backgroundDOM"><img src="IMG_00330.JPG" alt="" id="mainImage"></div>
+<p><button id="share">Share</button></p>
+
+
+<p>参考URL</p>
+<p>https://zenn.dev/ajitama_tkd/articles/15c5fb7e9382e8</p>
+<p>https://zenn.dev/de_teiu_tkg/articles/0938b41ec85d20</p>
+<div><canvas id="canvas"></canvas></div>
+<script type="text/javascript">
+
+
+window.addEventListener('load', ()=>{
+
+    var _img = document.getElementById('mainImage')
+    // _img.crossOrigin = "anonymous";
+
+    const canvas = document.getElementById("canvas");
+    canvas.width = _img.width
+    canvas.height = _img.height
+    const ctx = canvas.getContext('2d')
+    ctx.drawImage( _img, 0, 0 )
+
+
+    const dataURL = canvas.toDataURL("image/png")
+
+      const toBlob = (base64) => {
+        const decodedData = atob(base64.replace(/^.*,/, ""));
+        const buffers = new Uint8Array(decodedData.length);
+        for (let i = 0; i < decodedData.length; i++) {
+          buffers[i] = decodedData.charCodeAt(i);
+        }
+        try {
+          const blob = new Blob([buffers.buffer], {
+            type: "image/png",
+          });
+          return blob;
+        } catch (e) {
+          return null;
+        }
+      };
+
+      const blob = toBlob(dataURL);
+      const imageFile = new File([blob], "image.png", {
+        type: "image/png",
+      });
+
+
+    let _btn = document.getElementById('share')
+    _btn.addEventListener('click', ()=>{
+
+      navigator.share({
+        text: "共有テスト #hashtag https://nulldesign.jp",
+        url: "https://google.com",
+        files: [imageFile],
+      }).then(() => {
+        console.log("共有成功.");
+      }).catch((error) => {
+        console.log(error);
+      });
+
+    })
+   
+})
+
+
+</script>
+</body>
+</html>
+
+
+
+

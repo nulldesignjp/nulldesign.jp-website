@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0">
+<meta name="description" content="GPGPU / Curl Noise">
+<meta name="keywords" content="">
+<title>untitled</title>
+<style>
+html,body{height: 100%;overflow: hidden;}
+body{margin: 0;padding: 0;background: #000;}
+</style>
+</head>
+<body>
+<div id="container"></div>
+<script type="text/javascript" src="dat.gui.min.js"></script>
+<script type="text/javascript" src="perlin-noise-simplex.js"></script>
+<script type="text/javascript" src="three.min.js"></script>
+<script type="text/javascript" src="TweenMax.min.js"></script>
+<script type="text/javascript" src="stats.min.js"></script>
+<script type="text/javascript" src="OrbitControls.js"></script>
+<script type="text/javascript" src="GPUComputationRenderer.js"></script>
+<script type="text/javascript">
+    
+window.onload = function(){
+
+    var stats = new Stats();
+    stats.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
+    document.body.appendChild( stats.dom );
+
+    var scene,camera,focus,renderer;
+    var _particle,_mesh,_sphere;
+    var gpuCompute;
+    var velVar, posVar;
+    var NUM = 1024;
+
+    init();
+    update();
+
+    function init()
+    {
+        var width = window.innerWidth;
+        var height = window.innerHeight;
+
+        scene = new THREE.Scene();
+        scene.fog = new THREE.Fog( 0x000000, 1600, 3200 );
+
+        focus = new THREE.Vector3();
+
+        //  camera = new THREE.OrthographicCamera( width / - 2, width / 2, height / 2, height / - 2, 1, 16000 );
+        camera = new THREE.PerspectiveCamera( 50, width / height, 0.1, 3200 );
+        camera.position.set(0, 0, 1600);
+        camera.lookAt( focus );
+
+        renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setClearColor(0x000000);
+        renderer.setSize( width, height );
+        document.getElementById('container').appendChild(renderer.domElement);
+
+        //  _controls
+        _controls = new THREE.OrbitControls( camera, renderer.domElement );
+        _controls.autoRotate = false;
+        _controls.autoRotateSpeed = 1.0;
+        _controls.enableDamping = true;
+        _controls.dampingFactor = 0.15;
+        _controls.enableZoom = false;
+        _controls.enabled = true;
+        _controls.target = focus;
+        // _controls.minDistance = 480;
+        // _controls.maxDistance = 960;
+        // _controls.minPolarAngle = 0; // radians
+        // _controls.maxPolarAngle = Math.PI * 0.5 - Math.PI / 18; // radians
+
+        var _offsetX = Math.floor( Math.random() * 6000 );
+        var _offsetY = Math.floor( Math.random() * 6000 );
+
+        var _scale = 0.04;
+        var _noise = new SimplexNoise();
+        var _geometry = new THREE.PlaneGeometry( 10, 10, 1, 1 );
+        for( var i = 0; i < 100; i++ )
+        {
+            for( var j = 0; j < 100; j++ )
+            {
+                var _value = _noise.noise( ( _offsetX + i ) * _scale, ( _offsetY + j ) * _scale );
+                _value = ( _value + 1.0 ) * 0.5;
+                //_value = _value<0.5?0:1;
+                var _material = new THREE.MeshBasicMaterial({
+                    color: new THREE.Color( _value, _value, _value )
+                });
+                var _mesh = new THREE.Mesh( _geometry, _material );
+                _mesh.position.x = ( i - 50 ) * 10;
+                _mesh.position.y = ( j - 50 ) * 10;
+
+                scene.add( _mesh );
+            }
+        }
+        
+        window.onresize = resize;
+    }
+    function update()
+    {
+        stats.begin();
+        _animationKey = window.requestAnimationFrame( update );
+        _controls.update();
+
+        camera.lookAt(focus);
+        renderer.render( scene, camera );
+        stats.end();
+    }
+    function resize()
+    {
+        var width  = window.innerWidth;
+        var height = window.innerHeight;
+        renderer.setSize( width, height );
+        if( camera.aspect )
+        {
+            camera.aspect = width / height;
+        } else {
+            camera.left = - width * 0.5;
+            camera.right = width * 0.5;
+            camera.bottom = - height * 0.5;
+            camera.top = height * 0.5;
+        }
+        
+        camera.updateProjectionMatrix();
+    }
+}
+</script>
+</body>
+</html>
