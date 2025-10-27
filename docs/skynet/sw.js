@@ -1,5 +1,5 @@
 
-var CACHE_NAME  = "nulldesign.jp/skynet-cache-v5";
+var CACHE_NAME  = "nulldesign.jp/skynet-cache-v6";
 var DOMAIN = "";
 var urlsToCache = [
 
