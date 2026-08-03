@@ -33,24 +33,55 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "WebApplication",
-  "name": "metrogram3D",
-  "url": "https://nulldesign.jp/metrogram3d/",
-  "description": "A real-time simulation project visualizing the flow of people and trains based on Tokyo Metro data, including metro lines, locations, and timetables.",
-  "applicationCategory": "MultimediaApplication",
-  "operatingSystem": "All",
-  "browserRequirements": "Requires WebGL support",
-  "genre": "Data Visualization",
-  "author": {
-    "@type": "Person",
-    "name": "nulldesign",
-    "url": "https://nulldesign.jp"
-  },
-  "keywords": [
-    "WebGL",
-    "Tokyo Metro",
-    "Data Visualization",
-    "3D Simulation"
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://nulldesign.jp/metrogram3d/#webpage",
+      "url": "https://nulldesign.jp/metrogram3d/",
+      "name": "metrogram3D",
+      "description": "東京の地下鉄を走る列車と人の流れを、時刻表データから三次元空間に可視化する自主制作プロジェクト。",
+      "inLanguage": "ja",
+      "mainEntity": {
+        "@id": "https://nulldesign.jp/metrogram3d/#creativework"
+      }
+    },
+    {
+      "@type": "CreativeWork",
+      "@id": "https://nulldesign.jp/metrogram3d/#creativework",
+      "url": "https://nulldesign.jp/metrogram3d/",
+      "name": "metrogram3D",
+      "description": "東京の地下鉄を走る列車と、その周囲に生まれる人の流れを、あらかじめ整備した時刻表データから三次元空間に可視化する自主制作プロジェクト。リアルタイムの運行情報を示すサービスではなく、指定時刻の列車位置を再現するシミュレーション。",
+      "inLanguage": "ja",
+      "author": {
+        "@id": "https://nulldesign.jp/#person"
+      },
+      "creator": {
+        "@id": "https://nulldesign.jp/#person"
+      },
+      "isBasedOn": {
+        "@id": "https://nulldesign.jp/metrogram/#creativework"
+      },
+      "creativeWorkStatus": "Published",
+      "isAccessibleForFree": true,
+      "genre": [
+        "Data visualization",
+        "Interactive art"
+      ],
+      "keywords": [
+        "東京地下鉄",
+        "データビジュアライゼーション",
+        "WebGL",
+        "Three.js",
+        "JavaScript",
+        "時刻表",
+        "シミュレーション"
+      ],
+      "spatialCoverage": {
+        "@type": "Place",
+        "name": "Tokyo, Japan"
+      },
+      "copyrightNotice": "© nulldesign.jp"
+    }
   ]
 }
 </script>

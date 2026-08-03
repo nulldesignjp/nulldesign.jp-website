@@ -31,23 +31,52 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "WebApplication",
-  "name": "SkyNet",
-  "url": "https://nulldesign.jp/skynet/",
-  "description": "A project to visualize aviation information in Japan. Based on real-time flight schedules, it simulates the Japanese sky traffic at the moment of access.",
-  "applicationCategory": "MultimediaApplication",
-  "operatingSystem": "All",
-  "genre": "Data Visualization",
-  "author": {
-    "@type": "Person",
-    "name": "nulldesign",
-    "url": "https://nulldesign.jp"
-  },
-  "keywords": [
-    "Aviation Visualization",
-    "Flight Simulation",
-    "Japan Sky Traffic",
-    "Realtime Data"
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://nulldesign.jp/skynet/#webpage",
+      "url": "https://nulldesign.jp/skynet/",
+      "name": "SkyNet",
+      "description": "日本上空を行き交う航空機の動きを、フライトスケジュールをもとに可視化する自主制作プロジェクト。",
+      "inLanguage": "ja",
+      "mainEntity": {
+        "@id": "https://nulldesign.jp/skynet/#creativework"
+      }
+    },
+    {
+      "@type": "CreativeWork",
+      "@id": "https://nulldesign.jp/skynet/#creativework",
+      "url": "https://nulldesign.jp/skynet/",
+      "name": "SkyNet",
+      "description": "日本上空を行き交う航空機の動きを、アクセス時点で取得したフライトスケジュールをもとに可視化する自主制作プロジェクト。航空便の動きと日本の海岸線をWebGLで描画し、日本上空の交通の密度と広がりを体験として示す。",
+      "inLanguage": "ja",
+      "author": {
+        "@id": "https://nulldesign.jp/#person"
+      },
+      "creator": {
+        "@id": "https://nulldesign.jp/#person"
+      },
+      "creativeWorkStatus": "Published",
+      "isAccessibleForFree": true,
+      "genre": [
+        "Data visualization",
+        "Interactive art"
+      ],
+      "keywords": [
+        "航空交通",
+        "データビジュアライゼーション",
+        "WebGL",
+        "Three.js",
+        "JavaScript",
+        "フライトスケジュール",
+        "日本"
+      ],
+      "spatialCoverage": {
+        "@type": "Country",
+        "name": "Japan"
+      },
+      "copyrightNotice": "© nulldesign.jp"
+    }
   ]
 }
 </script>

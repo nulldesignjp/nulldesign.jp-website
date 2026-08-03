@@ -101,24 +101,53 @@ body.sp canvas{zoom:0.5;}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "WebApplication",
-  "name": "metrogram",
-  "url": "https://nulldesign.jp/metrogram/",
-  "description": "A real-time simulation project visualizing the movement of people and Tokyo Metro trains based on operational data, including lines, locations, and timetables.",
-  "applicationCategory": "MultimediaApplication",
-  "operatingSystem": "All",
-  "genre": "Data Visualization",
-  "dateCreated": "2014-09-11",
-  "author": {
-    "@type": "Person",
-    "name": "nulldesign",
-    "url": "https://nulldesign.jp"
-  },
-  "keywords": [
-    "Tokyo Metro",
-    "Data Visualization",
-    "Realtime Simulation",
-    "JavaScript"
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://nulldesign.jp/metrogram/#webpage",
+      "url": "https://nulldesign.jp/metrogram/",
+      "name": "metrogram",
+      "description": "東京の地下鉄の路線、駅、時刻表をもとに、列車の位置と都市の流れを二次元で可視化する自主制作プロジェクト。",
+      "inLanguage": "ja",
+      "mainEntity": {
+        "@id": "https://nulldesign.jp/metrogram/#creativework"
+      }
+    },
+    {
+      "@type": "CreativeWork",
+      "@id": "https://nulldesign.jp/metrogram/#creativework",
+      "url": "https://nulldesign.jp/metrogram/",
+      "name": "metrogram",
+      "description": "東京の地下鉄の路線、駅、時刻表をもとに、列車の位置と都市の流れを二次元で可視化する自主制作プロジェクト。2014年9月時点の情報を用いた非リアルタイムのシミュレーション。",
+      "inLanguage": "ja",
+      "author": {
+        "@id": "https://nulldesign.jp/#person"
+      },
+      "creator": {
+        "@id": "https://nulldesign.jp/#person"
+      },
+      "dateCreated": "2014-09",
+      "datePublished": "2014-09-11",
+      "creativeWorkStatus": "Published",
+      "isAccessibleForFree": true,
+      "genre": [
+        "Data visualization",
+        "Interactive art"
+      ],
+      "keywords": [
+        "東京地下鉄",
+        "データビジュアライゼーション",
+        "Canvas",
+        "JavaScript",
+        "時刻表",
+        "シミュレーション"
+      ],
+      "spatialCoverage": {
+        "@type": "Place",
+        "name": "Tokyo, Japan"
+      },
+      "copyrightNotice": "© nulldesign.jp"
+    }
   ]
 }
 </script>

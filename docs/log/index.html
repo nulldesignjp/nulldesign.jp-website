@@ -35,24 +35,48 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "SoftwareSourceCode",
-  "name": ".log",
-  "url": "https://nulldesign.jp/log/",
-  "description": "A collection of experimental creative coding pieces created as training exercises to learn JavaScript and algorithm implementations.",
-  "codeRepository": "https://nulldesign.jp/log/",
-  "programmingLanguage": "JavaScript",
-  "genre": "Creative Coding",
-  "author": {
-    "@type": "Person",
-    "name": "nulldesign",
-    "url": "https://nulldesign.jp"
-  },
-  "keywords": [
-    "JavaScript",
-    "Creative Coding",
-    "Canvas",
-    "Algorithm Studies",
-    "Interactive Art"
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://nulldesign.jp/log/#webpage",
+      "url": "https://nulldesign.jp/log/",
+      "name": ".log",
+      "description": "Flashを起点としたnulldesign.jpのもう一つの側面として、JavaScriptによる実験と習作を記録した個人プロジェクト。",
+      "inLanguage": "ja",
+      "mainEntity": {
+        "@id": "https://nulldesign.jp/log/#creativework"
+      }
+    },
+    {
+      "@type": "CreativeWork",
+      "@id": "https://nulldesign.jp/log/#creativework",
+      "url": "https://nulldesign.jp/log/",
+      "name": ".log",
+      "alternateName": "another side of nulldesign.jp",
+      "description": "Flashを起点としたnulldesign.jpのもう一つの側面として、JavaScriptを学ぶために制作された個人プロジェクト。企画、デザイン、実装、公開までを一人で行い、画像、図形、動き、空間、タイポグラフィを扱う実験と習作を記録している。",
+      "inLanguage": "ja",
+      "author": {
+        "@id": "https://nulldesign.jp/#person"
+      },
+      "creator": {
+        "@id": "https://nulldesign.jp/#person"
+      },
+      "creativeWorkStatus": "Published",
+      "isAccessibleForFree": true,
+      "genre": [
+        "Interactive art",
+        "Web experiment"
+      ],
+      "keywords": [
+        "JavaScript",
+        "Canvas",
+        "Flash",
+        "Web experiment",
+        "インタラクティブ表現",
+        "習作"
+      ],
+      "copyrightNotice": "© nulldesign.jp"
+    }
   ]
 }
 </script>

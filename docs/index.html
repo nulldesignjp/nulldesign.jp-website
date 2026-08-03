@@ -76,54 +76,68 @@ nav a.current{
 </style>
 <script type="application/ld+json">
 {
-"@context": "https://schema.org",
-"@type": "ProfilePage",
-"inLanguage": "ja",
-"mainEntity": {
-"@type": "Person",
-"@id": "https://nulldesign.jp/#person",
-"name": "Hiroshi KOI",
-"alternateName": "nulldesign",
-"jobTitle": "Design Engineer",
-"description": "WebGL/Three.jsを用いたインタラクティブ表現を制作するウェブクリエイティブデベロッパー。",
-"url": "https://nulldesign.jp",
-"sameAs": [
-"https://x.com/nulldesign",
-"https://www.instagram.com/hrsk.log/"
-],
-"award": [
-"The Webby Awards 2016 NETART winner",
-"Yahoo! JAPAN internet creative award 2015 innovation: Silver",
-"W3 Awards"
-],
-"workExample": [
-{
-"@type": "CreativeWork",
-"name": "ambitious_kenya",
-"url": "https://ijisosaku.com/ambitious_kenya/"
-},
-{
-"@type": "CreativeWork",
-"name": "SkyNet",
-"url": "https://nulldesign.jp/skynet/"
-},
-{
-"@type": "CreativeWork",
-"name": "metrogram3d",
-"url": "https://nulldesign.jp/metrogram3d/"
-},
-{
-"@type": "CreativeWork",
-"name": "metrogram",
-"url": "https://nulldesign.jp/metrogram/"
-},
-{
-"@type": "CreativeWork",
-"name": ".log",
-"url": "https://nulldesign.jp/log/"
-}
-]
-}
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://nulldesign.jp/#website",
+      "url": "https://nulldesign.jp/",
+      "name": "nulldesign.jp",
+      "alternateName": "nulldesign",
+      "inLanguage": ["ja", "en"]
+    },
+    {
+      "@type": "ProfilePage",
+      "@id": "https://nulldesign.jp/#webpage",
+      "url": "https://nulldesign.jp/",
+      "name": "Hiroshi KOI / nulldesign.jp",
+      "description": "Hiroshi KOI — 日本を拠点に活動するウェブクリエイティブデベロッパー。WebGL/Three.jsを用いたインタラクティブ表現で国内外のアワードを受賞。nulldesign.jpは代表作や習作、受賞歴のポートフォリオ。",
+      "inLanguage": "ja",
+      "isPartOf": {
+        "@id": "https://nulldesign.jp/#website"
+      },
+      "mainEntity": {
+        "@id": "https://nulldesign.jp/#person"
+      }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://nulldesign.jp/#person",
+      "name": "Hiroshi KOI",
+      "alternateName": "nulldesign",
+      "jobTitle": "Design Engineer",
+      "description": "WebGL/Three.jsを用いたインタラクティブ表現を制作するウェブクリエイティブデベロッパー。",
+      "url": "https://nulldesign.jp/",
+      "sameAs": [
+        "https://x.com/nulldesign",
+        "https://www.instagram.com/hrsk.log/"
+      ],
+      "award": [
+        "The Webby Awards 2016 NETART winner",
+        "Yahoo! JAPAN internet creative award 2015 innovation: Silver",
+        "W3 Awards"
+      ],
+      "workExample": [
+        {
+          "@type": "CreativeWork",
+          "name": "ambitious_kenya",
+          "url": "https://ijisosaku.com/ambitious_kenya/"
+        },
+        {
+          "@id": "https://nulldesign.jp/skynet/#creativework"
+        },
+        {
+          "@id": "https://nulldesign.jp/metrogram3d/#creativework"
+        },
+        {
+          "@id": "https://nulldesign.jp/metrogram/#creativework"
+        },
+        {
+          "@id": "https://nulldesign.jp/log/#creativework"
+        }
+      ]
+    }
+  ]
 }
 </script>
 </head>
