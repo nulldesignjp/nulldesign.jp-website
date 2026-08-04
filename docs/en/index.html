@@ -12,7 +12,7 @@
 <meta data-hid="description" name="description" content="Hiroshi KOI is a Japan-based web creative developer. His interactive work using WebGL and Three.js has received awards in Japan and internationally. nulldesign.jp is a portfolio featuring selected works, experiments, and awards.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400&family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
 <title>nulldesign.jp</title>
 <meta property="og:title" content="nulldesign.jp">
 <meta property="og:description" content="private works.">
@@ -24,58 +24,87 @@
 <link rel="alternate" hreflang="en" href="https://nulldesign.jp/en/">
 <link rel="alternate" hreflang="x-default" href="https://nulldesign.jp/">
 <style>
-body{
-	font-family: 'Lato', sans-serif;
-	font-weight: 300;
-	font-size: 1em;
+*{
+	box-sizing: border-box;
 }
-h1,h2,h3,p,ul,li{
+body{
+	margin: 0;
+	text-align: center;
+	font-family: "Noto Sans JP", sans-serif;
+	font-weight: 300;
 	font-size: 1em;
 }
 h1,h2,h3{
-	font-weight: 300;
+	font-family: "EB Garamond", serif;
+	font-weight: 400;
+	font-size: 1.5em;
 }
 h3{
-	margin-top: 5em;
+	margin-top: 3em;
 }
-
 h2 + h3{
 	margin-top: 0;
 }
 
-section p{
-	margin-left: 2.25em;
+p,ul,li{
+	font-size: 1em;
 }
 nav{
 	position: fixed;
 	right: 32px;
-	/*top: 16px;*/
+	top: 16px;
+	margin: 0;
+	padding: 0;
+	line-height: 1;
+	font-size: small;
 	background: rgba(255,255,255,0.75);
 }
-.info{
-	padding-left: 32px;
-	padding-right: 64px;
-	max-width: 720px;
-}
-.info p{
-	font-size: small;
-}
-
 nav a.current{
 	color: #333;
 	text-decoration: none;
 	pointer-events: none;
 }
 
-@media screen and (max-width: 768px) {
-	.info{
-		padding-left: 32px;
-		padding-right: 32px;
-		max-width: auto;
-	}
+header,
+footer{
+	padding: 3em 0;
+}
 
-	.info p{
-		margin-left: 0;
+header + section{
+	margin-top: 0;
+}
+
+footer p{
+	font-size: small;
+}
+
+section{
+	margin-top: 5em;
+}
+
+#container{
+	margin: 0 auto;
+	padding: 0 20px;
+	max-width: 720px;
+	text-align: left;
+}
+
+.info{}
+.info p{
+	font-size: small;
+}
+
+.profile{}
+.profile p{
+	margin: 0;
+}
+@media screen and (max-width: 720px) {
+	header,
+	footer{
+		padding: 1em 0;
+	}
+	section{
+		margin-top: 3em;
 	}
 }
 </style>
@@ -151,11 +180,12 @@ nav a.current{
   gtag('config', 'G-DBF3XPFL67');
 </script>
 <body>
+<div id="container">
 <header>
 	<h1>nulldesign.jp</h1>
 	<nav><a href="/">JP</a> | <a href="/en" class="current">EN</a></nav>
 </header>
-<section>
+<section class="profile">
 	<h1>Profile</h1>
 	<p>Hiroshi KOI.</p>
 	<p>Design Engineer.</p>
@@ -193,7 +223,6 @@ nav a.current{
 </section>
 
 <section class="info">
-<h2>Contents Info</h2>
 <h3>.log</h3>
 <p class="en">.log is a personal project that records another side of nulldesign.jp—one that began with Flash. Created around 2013, it emerged as its creator, who had been working with Flash, responded to a changing web landscape shaped by the rise of the iPhone and began learning JavaScript. The project was conceived, designed, built, and published by one person. Over roughly three to six months, it accumulated experiments and studies as a continuing log.</p>
 <p class="en">The name nulldesign.jp had originally been created for Flash work. The phrase “the another side of nulldesign.jp” expresses an intention to explore a direction different from the one the name had initially represented. The creator had already grown tired of front-end work before starting with Flash and had not expected to return to it so deeply. For that reason, .log was kept separate from the public face of nulldesign.jp: it was a space for side projects, learning, and experimentation rather than a central body of work.</p>
@@ -220,7 +249,7 @@ nav a.current{
 <p class="en">metrogram3D was not intended as a web experience for receiving information. It asks for neither interaction nor frequent updating. Instead, it was conceived as something closer to a screensaver: a work that can simply be left running and watched. By quietly visualizing the hidden operation of the city, it creates a space on the web for time spent looking—for its own sake.</p>
 
 <h3>SkyNet</h3>
-<p class="en"><b>SkyNet</b> is an independent project that visualizes aircraft moving through Japanese airspace. Created around 2018–2019, it was produced entirely by one person, who handled the concept, design, data acquisition and preparation, implementation, and publication. Using flight schedules available at the moment of access, the work simulates the state of the sky above Japan.</p>
+<p class="en">SkyNet is an independent project that visualizes aircraft moving through Japanese airspace. Created around 2018–2019, it was produced entirely by one person, who handled the concept, design, data acquisition and preparation, implementation, and publication. Using flight schedules available at the moment of access, the work simulates the state of the sky above Japan.</p>
 <p class="en">The project began as a return to WebGL. At the time, the creator was working in a research and development division, primarily creating digital experiences with Unity, but was preparing to move back to a web-focused team. Looking for a way to regain familiarity with WebGL, the creator explored open data and discovered that airline schedules could be accessed. Following earlier work on ground transportation, attention turned to the sky.</p>
 <p class="en">SkyNet uses aviation data from JAL and ANA. In addition to daily flight schedules, real-time information was available, which suggested a wider range of possibilities for the work. Rather than simply replaying a fixed timetable, the project could work with conditions that changed according to when the data was retrieved. Through the movement of flights on screen, it offers a view of the density and scale of air traffic over Japan—something rarely visible in everyday life.</p>
 <p class="en">Air traffic alone, however, can be difficult to situate spatially. To provide a point of reference, the work incorporates Japanese coastline data, rendered as line segments. The entire coastline is constructed as a single mesh, preserving a detailed outline while making the relationship between aircraft and the ground easier to understand. Rather than functioning as a map that adds more information, the coastline serves as a visual anchor for reading movement in the sky.</p>
@@ -270,5 +299,6 @@ nav a.current{
 <footer>
 <p>COPYRIGHT &copy;nulldesign.jp ALL RIGHTS RESERVED.</p>
 </footer>
+<!-- #container --></div>
 </body>
 </html>
