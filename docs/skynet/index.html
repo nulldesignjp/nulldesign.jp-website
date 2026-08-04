@@ -33,49 +33,28 @@
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": "WebPage",
-      "@id": "https://nulldesign.jp/skynet/#webpage",
+      "@type": ["CreativeWork", "WebApplication"],
+      "@id": "https://nulldesign.jp/skynet/#work",
       "url": "https://nulldesign.jp/skynet/",
       "name": "SkyNet",
-      "description": "日本上空を行き交う航空機の動きを、フライトスケジュールをもとに可視化する自主制作プロジェクト。",
-      "inLanguage": "ja",
-      "mainEntity": {
-        "@id": "https://nulldesign.jp/skynet/#creativework"
-      }
+      "description": "リアルタイムに取得したフライトスケジュールをもとに、アクセス時点での日本上空の航空交通をシミュレーション・可視化するインタラクティブ作品。",
+      "inLanguage": ["ja", "en"],
+      "image": "https://nulldesign.jp/ogp.png",
+      "author": { "@id": "https://nulldesign.jp/#person" },
+      "creator": { "@id": "https://nulldesign.jp/#person" },
+      "publisher": { "@id": "https://nulldesign.jp/#person" },
+      "isPartOf": { "@id": "https://nulldesign.jp/#website" },
+      "keywords": ["Three.js", "WebGL", "リアルタイムデータ", "航空", "オープンデータ"],
+      "citation": [
+        "東京公共交通オープンデータチャレンジ",
+        "国土交通省 海岸線データ"
+      ],
+      "datePublished": "YYYY-MM-DD"
     },
     {
-      "@type": "CreativeWork",
-      "@id": "https://nulldesign.jp/skynet/#creativework",
-      "url": "https://nulldesign.jp/skynet/",
-      "name": "SkyNet",
-      "description": "日本上空を行き交う航空機の動きを、アクセス時点で取得したフライトスケジュールをもとに可視化する自主制作プロジェクト。航空便の動きと日本の海岸線をWebGLで描画し、日本上空の交通の密度と広がりを体験として示す。",
-      "inLanguage": "ja",
-      "author": {
-        "@id": "https://nulldesign.jp/#person"
-      },
-      "creator": {
-        "@id": "https://nulldesign.jp/#person"
-      },
-      "creativeWorkStatus": "Published",
-      "isAccessibleForFree": true,
-      "genre": [
-        "Data visualization",
-        "Interactive art"
-      ],
-      "keywords": [
-        "航空交通",
-        "データビジュアライゼーション",
-        "WebGL",
-        "Three.js",
-        "JavaScript",
-        "フライトスケジュール",
-        "日本"
-      ],
-      "spatialCoverage": {
-        "@type": "Country",
-        "name": "Japan"
-      },
-      "copyrightNotice": "© nulldesign.jp"
+      "@type": "Person",
+      "@id": "https://nulldesign.jp/#person",
+      "name": "Hiroshi Koi"
     }
   ]
 }

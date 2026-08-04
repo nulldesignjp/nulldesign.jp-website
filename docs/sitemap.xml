@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <url>
+    <loc>https://nulldesign.jp/</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://nulldesign.jp/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://nulldesign.jp/en" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nulldesign.jp/" />
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <url>
+    <loc>https://nulldesign.jp/en</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://nulldesign.jp/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://nulldesign.jp/en" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nulldesign.jp/" />
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://nulldesign.jp/skynet/</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://nulldesign.jp/metrogram3d/</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://nulldesign.jp/metrogram/</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://nulldesign.jp/log/</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://nulldesign.jp/mass/</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+</urlset>

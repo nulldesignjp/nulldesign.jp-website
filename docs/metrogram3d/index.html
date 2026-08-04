@@ -35,58 +35,26 @@
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": "WebPage",
-      "@id": "https://nulldesign.jp/metrogram3d/#webpage",
+      "@type": ["CreativeWork", "WebApplication"],
+      "@id": "https://nulldesign.jp/metrogram3d/#work",
       "url": "https://nulldesign.jp/metrogram3d/",
       "name": "metrogram3D",
-      "description": "東京の地下鉄を走る列車と人の流れを、時刻表データから三次元空間に可視化する自主制作プロジェクト。",
-      "inLanguage": "ja",
-      "mainEntity": {
-        "@id": "https://nulldesign.jp/metrogram3d/#creativework"
-      }
+      "description": "東京の地下鉄・鉄道運行データを基にした3Dビジュアライゼーション作品。metrogramの3D版。",
+      "inLanguage": ["ja", "en"],
+      "image": "https://nulldesign.jp/ogp.png",
+      "author": { "@id": "https://nulldesign.jp/#person" },
+      "creator": { "@id": "https://nulldesign.jp/#person" },
+      "publisher": { "@id": "https://nulldesign.jp/#person" },
+      "isPartOf": { "@id": "https://nulldesign.jp/#website" },
+      "isBasedOn": { "@id": "https://nulldesign.jp/metrogram/#work" },
+      "sameAs": "https://experiments.withgoogle.com/metrogram3d",
+      "keywords": ["Three.js", "WebGL", "3Dビジュアライゼーション", "鉄道", "Experiments with Google"],
+      "datePublished": "2015-XX-XX"
     },
     {
-      "@type": "CreativeWork",
-      "@id": "https://nulldesign.jp/metrogram3d/#creativework",
-      "url": "https://nulldesign.jp/metrogram3d/",
-      "name": "metrogram3D",
-      "description": "東京の地下鉄を走る列車と、その周囲に生まれる人の流れを、あらかじめ整備した時刻表データから三次元空間に可視化する自主制作プロジェクト。リアルタイムの運行情報を示すサービスではなく、指定時刻の列車位置を再現するシミュレーション。",
-      "inLanguage": "ja",
-      "author": {
-        "@id": "https://nulldesign.jp/#person"
-      },
-      "creator": {
-        "@id": "https://nulldesign.jp/#person"
-      },
-      "sameAs": [
-        "https://experiments.withgoogle.com/metrogram3d"
-      ],
-      "award": [
-        "Yahoo! JAPAN Internet Creative Award 2015, Innovation Category: Silver"
-      ],
-      "isBasedOn": {
-        "@id": "https://nulldesign.jp/metrogram/#creativework"
-      },
-      "creativeWorkStatus": "Published",
-      "isAccessibleForFree": true,
-      "genre": [
-        "Data visualization",
-        "Interactive art"
-      ],
-      "keywords": [
-        "東京地下鉄",
-        "データビジュアライゼーション",
-        "WebGL",
-        "Three.js",
-        "JavaScript",
-        "時刻表",
-        "シミュレーション"
-      ],
-      "spatialCoverage": {
-        "@type": "Place",
-        "name": "Tokyo, Japan"
-      },
-      "copyrightNotice": "© nulldesign.jp"
+      "@type": "Person",
+      "@id": "https://nulldesign.jp/#person",
+      "name": "Hiroshi Koi"
     }
   ]
 }

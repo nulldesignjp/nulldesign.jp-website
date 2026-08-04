@@ -117,54 +117,36 @@ section{
       "@id": "https://nulldesign.jp/#website",
       "url": "https://nulldesign.jp/",
       "name": "nulldesign.jp",
-      "alternateName": "nulldesign",
-      "inLanguage": ["ja", "en"]
+      "description": "日本を拠点に活動するウェブクリエイティブデベロッパー、Hiroshi Koiによるインタラクティブ作品のポートフォリオサイト。",
+      "inLanguage": ["ja", "en"],
+      "publisher": { "@id": "https://nulldesign.jp/#person" }
     },
     {
       "@type": "ProfilePage",
-      "@id": "https://nulldesign.jp/en/#webpage",
-      "url": "https://nulldesign.jp/en/",
-      "name": "Hiroshi KOI / nulldesign.jp",
-      "description": "Hiroshi KOI is a Japan-based web creative developer. His interactive work using WebGL and Three.js has received awards in Japan and internationally. nulldesign.jp is a portfolio featuring selected works, experiments, and awards.",
+      "@id": "https://nulldesign.jp/en#webpage",
+      "url": "https://nulldesign.jp/en",
+      "name": "nulldesign.jp",
       "inLanguage": "en",
-      "isPartOf": {
-        "@id": "https://nulldesign.jp/#website"
-      },
-      "mainEntity": {
-        "@id": "https://nulldesign.jp/#person"
-      },
-      "mentions": [
-        {
-          "@id": "https://nulldesign.jp/skynet/#creativework"
-        },
-        {
-          "@id": "https://nulldesign.jp/metrogram3d/#creativework"
-        },
-        {
-          "@id": "https://nulldesign.jp/metrogram/#creativework"
-        },
-        {
-          "@id": "https://nulldesign.jp/log/#creativework"
-        }
-      ]
+      "isPartOf": { "@id": "https://nulldesign.jp/#website" },
+      "about": { "@id": "https://nulldesign.jp/#person" },
+      "mainEntity": { "@id": "https://nulldesign.jp/#person" }
     },
     {
       "@type": "Person",
       "@id": "https://nulldesign.jp/#person",
-      "name": "Hiroshi KOI",
-      "alternateName": "nulldesign",
+      "name": "Hiroshi Koi",
       "jobTitle": "Design Engineer",
-      "description": "A web creative developer creating interactive experiences with WebGL and Three.js.",
       "url": "https://nulldesign.jp/",
       "sameAs": [
         "https://x.com/nulldesign",
-        "https://www.instagram.com/hrsk.log/"
+        "https://www.instagram.com/hrsk.log/",
+        "https://github.com/nulldesignjp"
       ],
       "award": [
-        "The Webby Awards 2016 NETART winner",
-        "Yahoo! JAPAN internet creative award 2015 innovation: Silver",
-        "W3 Awards"
-      ]
+        "Webby Awards 2016",
+        "Yahoo! JAPAN Internet Creative Award 2015"
+      ],
+      "knowsAbout": ["WebGL", "Three.js", "Interactive Web Development", "Data Visualization"]
     }
   ]
 }
