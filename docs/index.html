@@ -142,19 +142,43 @@ section{
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": ["CreativeWork", "WebApplication"],
-      "@id": "https://nulldesign.jp/metrogram/#work",
-      "url": "https://nulldesign.jp/metrogram/",
-      "name": "metrogram",
-      "description": "東京の地下鉄・鉄道網の運行データをもとにしたリアルタイム・ビジュアライゼーション作品。",
-      "inLanguage": ["ja", "en"],
-      "image": "https://nulldesign.jp/ogp.png",
-      "author": { "@id": "https://nulldesign.jp/#person" },
+      "@type": "CreativeWork",
+      "@id": "https://nulldesign.jp/#works",
+      "name": "Works",
       "creator": { "@id": "https://nulldesign.jp/#person" },
-      "publisher": { "@id": "https://nulldesign.jp/#person" },
       "isPartOf": { "@id": "https://nulldesign.jp/#website" },
-      "keywords": ["Three.js", "WebGL", "データビジュアライゼーション", "鉄道", "リアルタイム"],
-      "datePublished": "YYYY-MM-DD"
+      "itemListElement": [
+        {
+          "@type": "CreativeWork",
+          "position": 1,
+          "url": "https://ijisosaku.com/ambitious_kenya/",
+          "name": "ambitious_kenya"
+        },
+        {
+          "@type": "CreativeWork",
+          "position": 2,
+          "url": "https://nulldesign.jp/skynet/",
+          "name": "SkyNet"
+        },
+        {
+          "@type": "CreativeWork",
+          "position": 3,
+          "url": "https://nulldesign.jp/metrogram3d/",
+          "name": "metrogram3d"
+        },
+        {
+          "@type": "CreativeWork",
+          "position": 4,
+          "url": "https://nulldesign.jp/metrogram/",
+          "name": "metrogram"
+        },
+        {
+          "@type": "CreativeWork",
+          "position": 5,
+          "url": "https://nulldesign.jp/log/",
+          "name": ".log"
+        }
+      ]
     },
     {
       "@type": "Person",
