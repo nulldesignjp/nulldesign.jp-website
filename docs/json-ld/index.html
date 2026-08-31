@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>構造化データ（JSON-LD）生成ツール</title>
+<style>
+  :root {
+    --ink: #1a2233;
+    --ink-soft: #4a5568;
+    --line: #d8dde5;
+    --bg: #f6f7f9;
+    --panel: #ffffff;
+    --accent: #2d5a6b;
+    --accent-soft: #e8f0f2;
+    --required: #b5432b;
+    --required-bg: #fbeae6;
+    --recommended: #3d6b4f;
+    --recommended-bg: #eaf3ec;
+    --mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic', sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: var(--sans); background: var(--bg); color: var(--ink); line-height: 1.6; }
+
+  header {
+    padding: 22px 32px 0;
+    border-bottom: 1px solid var(--line);
+    background: var(--panel);
+  }
+  header h1 { margin: 0 0 4px; font-size: 20px; font-weight: 700; }
+  header p.lead { margin: 0 0 16px; color: var(--ink-soft); font-size: 13.5px; max-width: 720px; }
+
+  .type-tabs { display: flex; gap: 4px; }
+  .type-tab {
+    padding: 9px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+  }
+  .type-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .type-tab .scope {
+    display: block;
+    font-size: 10.5px;
+    font-weight: 400;
+    color: #9aa4b2;
+    margin-top: 1px;
+  }
+
+  .layout { display: grid; grid-template-columns: 1fr 1fr; gap: 0; min-height: calc(100vh - 110px); }
+  @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+
+  .form-pane { padding: 24px 32px 80px; overflow-y: auto; }
+  .preview-pane {
+    padding: 24px 32px 80px; background: #10151f; color: #d7dde5;
+    overflow-y: auto; position: sticky; top: 0; align-self: start; max-height: 100vh;
+  }
+
+  .type-banner {
+    background: var(--accent-soft);
+    border: 1px solid #c3dae0;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 12px;
+    color: #234; margin-bottom: 16px;
+  }
+
+  section.field-group {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+    padding: 18px 20px; margin-bottom: 16px;
+  }
+  section.field-group h2 { font-size: 14.5px; margin: 0 0 4px; display: flex; align-items: center; gap: 8px; }
+  section.field-group > p.desc { margin: 0 0 14px; font-size: 12.5px; color: var(--ink-soft); }
+
+  .badge { font-size: 10.5px; font-weight: 700; padding: 2px 8px; border-radius: 20px; letter-spacing: 0.02em; }
+  .badge.required { color: var(--required); background: var(--required-bg); }
+  .badge.recommended { color: var(--recommended); background: var(--recommended-bg); }
+
+  label { display: block; font-size: 12.5px; font-weight: 600; margin: 12px 0 4px; color: var(--ink); }
+  label .hint { font-weight: 400; color: var(--ink-soft); display: block; font-size: 11.5px; margin-top: 2px; }
+
+  input[type=text], input[type=url], input[type=number], input[type=date], input[type=email], input[type=tel], textarea, select {
+    width: 100%; padding: 8px 10px; border: 1px solid var(--line); border-radius: 6px;
+    font-size: 13.5px; font-family: var(--sans); background: #fcfcfd;
+  }
+  input:focus, textarea:focus, select:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+  textarea { resize: vertical; min-height: 54px; }
+
+  .toggle-row { display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
+  .toggle-row .switch { width: 34px; height: 19px; background: var(--line); border-radius: 20px; position: relative; transition: background 0.15s; flex-shrink: 0; }
+  .toggle-row .switch::after { content: ''; position: absolute; top: 2px; left: 2px; width: 15px; height: 15px; background: #fff; border-radius: 50%; transition: transform 0.15s; box-shadow: 0 1px 2px rgba(0,0,0,0.25); }
+  .toggle-row.on .switch { background: var(--accent); }
+  .toggle-row.on .switch::after { transform: translateX(15px); }
+  .sub-panel { margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--line); display: none; }
+  .sub-panel.show { display: block; }
+
+  .repeat-list { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
+  .repeat-row { display: flex; gap: 6px; }
+  .repeat-row input { flex: 1; }
+  .repeat-row button, .add-btn {
+    border: 1px solid var(--line); background: #fff; border-radius: 6px; cursor: pointer;
+    font-size: 12px; padding: 6px 10px; color: var(--ink-soft);
+  }
+  .repeat-row button:hover, .add-btn:hover { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
+  .add-btn { margin-top: 6px; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 12px; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0 12px; }
+
+  .preview-pane h2 {
+    color: #fff; font-size: 13px; margin: 0 0 10px; letter-spacing: 0.03em; text-transform: uppercase;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  #copyBtn {
+    background: #2d5a6b; color: #fff; border: none; padding: 7px 14px; border-radius: 6px;
+    font-size: 12px; cursor: pointer; font-weight: 600; text-transform: none; letter-spacing: 0;
+  }
+  #copyBtn:hover { background: #38708a; }
+  #copyBtn.copied { background: var(--recommended); }
+  pre#jsonOutput { font-family: var(--mono); font-size: 12.5px; line-height: 1.65; white-space: pre-wrap; word-break: break-word; margin: 0; }
+
+  .validation { margin-top: 16px; padding: 12px 14px; border-radius: 8px; font-size: 12.5px; }
+  .validation.error { background: #3a2320; color: #f5b7a8; border: 1px solid #5c3a33; }
+  .validation.ok { background: #1e332a; color: #a9d9bc; border: 1px solid #345643; }
+  .validation ul { margin: 6px 0 0; padding-left: 18px; }
+  .note { font-size: 11.5px; color: #8b95a5; margin-top: 18px; padding-top: 14px; border-top: 1px solid #232b39; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>構造化データ（JSON-LD）生成ツール</h1>
+  <p class="lead">Google Search Central公式ドキュメントの必須/推奨プロパティに沿って、フォーム入力からJSON-LDを組み立てます。型を切り替えて使用してください。</p>
+  <div class="type-tabs" id="typeTabs"></div>
+</header>
+
+<div class="layout">
+  <div class="form-pane" id="formPane"></div>
+  <div class="preview-pane">
+    <h2>JSON-LD プレビュー <button id="copyBtn" onclick="copyJson()">コピー</button></h2>
+    <pre id="jsonOutput"></pre>
+    <div id="validationBox"></div>
+    <p class="note">この出力は叩き台です。ページ上に実際に表示されている情報とすべて一致しているか、人間の確認を経てから実装してください（Googleの品質ガイドラインにより、表示されていない情報のマークアップは禁止されています）。</p>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   拡張パターン（新しい型を追加する手順）
+   ------------------------------------------------------------
+   1. TYPES に新しいキーを追加する（例: "localbusiness"）
+   2. scope: "サイト共通（1回）" または "ページ単位（都度）" を明記
+   3. render: フォームのHTML文字列を返す関数
+   4. build: フォーム入力からJSON-LDオブジェクトを組み立てる関数
+   5. validate: 必須条件を満たしているかチェックし、エラー配列を返す関数
+   6. init（任意）: repeat-listなど初期化が必要な場合に呼ぶ処理
+   これ以外のコード（タブ切り替え・プレビュー描画・コピー機能）は共通なので触らなくてよい。
+   ============================================================ */
+
+const TYPES = {
+
+  article: {
+    label: "Article",
+    scope: "ページ単位（記事ごと）",
+    banner: "ニュース・コラム・ブログ記事ページに実装します。Google公式には必須プロパティがありませんが、画像は最低1枚必須です（マークアップの有無を問わず）。",
+    render: () => `
+      <section class="field-group">
+        <h2>型の選択 <span class="badge recommended">推奨</span></h2>
+        <label>記事の種類</label>
+        <select id="art_type">
+          <option value="Article">Article（判別しづらい場合）</option>
+          <option value="NewsArticle">NewsArticle（ニュース性が強い場合）</option>
+          <option value="BlogPosting">BlogPosting（一般的なブログ記事）</option>
+        </select>
+      </section>
+
+      <section class="field-group">
+        <h2>基本情報 <span class="badge recommended">推奨</span></h2>
+        <label>見出し（headline） <span class="hint">簡潔に。長いと端末により省略表示される</span></label>
+        <input type="text" id="art_headline" placeholder="例：〇〇に関する最新情報">
+        <label>公開日（datePublished）</label>
+        <input type="date" id="art_datePublished">
+        <label>更新日（dateModified）</label>
+        <input type="date" id="art_dateModified">
+      </section>
+
+      <section class="field-group">
+        <h2>画像（image） <span class="badge required">実質必須</span></h2>
+        <p class="desc">記事内容を表す画像。ロゴやキャプション画像は不可。すべてのページに最低1枚の画像が必要です。16:9・4:3・1:1推奨。</p>
+        <div class="repeat-list" id="art_imageList"></div>
+        <button class="add-btn" onclick="addRepeatRow('art_imageList','art_img','https://example.com/photo.jpg')">＋ 画像URLを追加</button>
+      </section>
+
+      <section class="field-group">
+        <h2>著者（author） <span class="badge recommended">推奨</span></h2>
+        <p class="desc">ページ上に表示されている著者を全員追加してください。氏名のみを入力し、役職・敬称は別欄に分けます。</p>
+        <div id="art_authorList"></div>
+        <button class="add-btn" onclick="addArtAuthor()">＋ 著者を追加</button>
+      </section>
+
+      <section class="field-group">
+        <h2>発行者（publisher） <span class="badge recommended">推奨</span></h2>
+        <label>組織名</label>
+        <input type="text" id="art_publisherName" placeholder="例：株式会社Example">
+        <label>組織URL</label>
+        <input type="url" id="art_publisherUrl" placeholder="https://www.example.com">
+      </section>
+    `,
+    init: () => {
+      document.getElementById('art_imageList').innerHTML=''; addRepeatRow('art_imageList','art_img','');
+      document.getElementById('art_authorList').innerHTML=''; addArtAuthor();
+    },
+    build: () => {
+      const obj = { "@context": "https://schema.org", "@type": val('art_type') || 'Article' };
+      const set = (key, id) => { const v = val(id); if (v) obj[key] = v; };
+      set('headline','art_headline'); set('datePublished','art_datePublished'); set('dateModified','art_dateModified');
+
+      const images = collectRepeatValues('art_imageList');
+      if (images.length) obj.image = images.length === 1 ? images[0] : images;
+
+      const authorRows = Array.from(document.querySelectorAll('#art_authorList .art-author-row'));
+      const authors = authorRows.map(row => {
+        const name = row.querySelector('.art-author-name')?.value.trim();
+        const url = row.querySelector('.art-author-url')?.value.trim();
+        const jobTitle = row.querySelector('.art-author-jobtitle')?.value.trim();
+        const type = row.querySelector('.art-author-type')?.value || 'Person';
+        if (!name) return null;
+        const a = { "@type": type, "name": name };
+        if (url) a.url = url;
+        if (jobTitle && type === 'Person') a.jobTitle = jobTitle;
+        return a;
+      }).filter(Boolean);
+      if (authors.length) obj.author = authors.length === 1 ? authors[0] : authors;
+
+      if (val('art_publisherName')) {
+        obj.publisher = { "@type": "Organization", "name": val('art_publisherName') };
+        if (val('art_publisherUrl')) obj.publisher.url = val('art_publisherUrl');
+      }
+
+      return obj;
+    },
+    validate: (obj) => {
+      const errors = [];
+      if (!obj.image) errors.push('画像（image）が未入力です。すべてのページに最低1枚の画像が必要です。');
+      if (!obj.headline) errors.push('見出し（headline）が未入力です（推奨ですが実務上ほぼ必須の項目です）。');
+      return errors;
+    }
+  },
+
+  organization: {
+    label: "Organization",
+    scope: "サイト共通（1回のみ）",
+    banner: "ホームページ、または会社概要ページに1回だけ実装します。Google公式：必須プロパティなし。該当する推奨プロパティを可能な限り追加してください。",
+    render: () => `
+      <section class="field-group">
+        <h2>基本情報 <span class="badge recommended">推奨</span></h2>
+        <p class="desc">Google公式：必須プロパティはないが、name/urlは実質的に核となる情報。</p>
+        <label>組織名（name）</label>
+        <input type="text" id="org_name" placeholder="例：株式会社Example">
+        <label>通称・別名（alternateName）</label>
+        <input type="text" id="org_altName" placeholder="例：Example">
+        <label>正式登記名（legalName） <span class="hint">nameと異なる場合のみ</span></label>
+        <input type="text" id="org_legalName" placeholder="例：株式会社Example商事">
+        <label>サイトURL（url）</label>
+        <input type="url" id="org_url" placeholder="https://www.example.co.jp">
+        <label>ロゴ画像URL（logo） <span class="hint">112×112px以上、背景は白推奨</span></label>
+        <input type="url" id="org_logo" placeholder="https://www.example.co.jp/logo.png">
+        <label>組織の説明（description）</label>
+        <textarea id="org_description" placeholder="組織の紹介文"></textarea>
+        <label>設立日（foundingDate）</label>
+        <input type="date" id="org_foundingDate">
+      </section>
+
+      <section class="field-group">
+        <h2>連絡先情報 <span class="badge recommended">推奨</span></h2>
+        <label>電話番号（telephone） <span class="hint">国コード・市外局番を含める</span></label>
+        <input type="tel" id="org_telephone" placeholder="+81-3-9999-9999">
+        <label>メールアドレス（email）</label>
+        <input type="email" id="org_email" placeholder="contact@example.co.jp">
+      </section>
+
+      <section class="field-group">
+        <h2>住所（address / PostalAddress） <span class="badge recommended">推奨</span></h2>
+        <p class="desc">指定するプロパティが多いほど検索結果の質が向上します。</p>
+        <div class="grid2">
+          <div><label>郵便番号</label><input type="text" id="org_postalCode" placeholder="105-0001"></div>
+          <div><label>国コード（2文字）</label><input type="text" id="org_addressCountry" placeholder="JP"></div>
+        </div>
+        <label>都道府県（addressRegion）</label>
+        <input type="text" id="org_addressRegion" placeholder="東京都">
+        <label>市区町村（addressLocality）</label>
+        <input type="text" id="org_addressLocality" placeholder="港区">
+        <label>番地（streetAddress）</label>
+        <input type="text" id="org_streetAddress" placeholder="〇〇1-2-3">
+      </section>
+
+      <section class="field-group">
+        <h2>識別子・法人情報 <span class="badge recommended">推奨</span></h2>
+        <p class="desc">該当するものだけ入力してください（多くの組織には不要です）。</p>
+        <div class="grid2">
+          <div><label>従業員数（numberOfEmployees）</label><input type="number" id="org_numEmployees" placeholder="例：2056"></div>
+          <div><label>NAICSコード（naics）</label><input type="text" id="org_naics" placeholder=""></div>
+        </div>
+        <div class="grid2">
+          <div><label>納税者番号（taxID）</label><input type="text" id="org_taxId" placeholder=""></div>
+          <div><label>VATコード（vatID）</label><input type="text" id="org_vatId" placeholder=""></div>
+        </div>
+        <label>ISO 6523識別子（iso6523Code） <span class="hint">例：0199:（LEIコード）、0060:（DUNS）</span></label>
+        <input type="text" id="org_iso6523" placeholder="0199:724500PMK2A2M1SQQ228">
+      </section>
+
+      <section class="field-group">
+        <h2>sameAs（外部の公式URL） <span class="badge recommended">推奨</span></h2>
+        <p class="desc">公式SNS・Wikipedia等、組織を一意に示す信頼できる外部URL。複数指定可。取引先リンクや内部ページは含めない。</p>
+        <div class="repeat-list" id="org_sameAsList"></div>
+        <button class="add-btn" onclick="addRepeatRow('org_sameAsList','org_sameAs','https://twitter.com/example_jp')">＋ URLを追加</button>
+      </section>
+    `,
+    init: () => { addRepeatRow('org_sameAsList','org_sameAs',''); },
+    build: () => {
+      const obj = { "@context": "https://schema.org", "@type": "Organization" };
+      const set = (key, id) => { const v = val(id); if (v) obj[key] = v; };
+      set('name','org_name'); set('alternateName','org_altName'); set('legalName','org_legalName');
+      set('url','org_url'); set('logo','org_logo'); set('description','org_description');
+      set('foundingDate','org_foundingDate'); set('telephone','org_telephone'); set('email','org_email');
+
+      if (val('org_numEmployees')) obj.numberOfEmployees = { "@type": "QuantitativeValue", "value": Number(val('org_numEmployees')) };
+      set('naics','org_naics'); set('taxID','org_taxId'); set('vatID','org_vatId'); set('iso6523Code','org_iso6523');
+
+      const addr = {};
+      const addrMap = { streetAddress:'org_streetAddress', addressLocality:'org_addressLocality', addressRegion:'org_addressRegion', postalCode:'org_postalCode', addressCountry:'org_addressCountry' };
+      Object.entries(addrMap).forEach(([k,id]) => { const v = val(id); if (v) addr[k] = v; });
+      if (Object.keys(addr).length) { addr["@type"] = "PostalAddress"; obj.address = addr; }
+
+      const sameAs = collectRepeatValues('org_sameAsList');
+      if (sameAs.length) obj.sameAs = sameAs.length === 1 ? sameAs[0] : sameAs;
+
+      return obj;
+    },
+    validate: (obj) => {
+      const errors = [];
+      if (!obj.name) errors.push('組織名（name）が未入力です。必須ではありませんが、実質的にほぼ全ての運用で必要になります。');
+      return errors;
+    }
+  },
+
+  product: {
+    label: "Product",
+    scope: "ページ単位（商品ページごと）",
+    banner: "商品ページ1つにつき1回実装します。Google公式ルール：name は必須。review / aggregateRating / offers のいずれか1つ以上も必須です。",
+    render: () => `
+      <section class="field-group">
+        <h2>基本情報 <span class="badge required">必須</span></h2>
+        <label>商品名 <span class="badge required" style="margin-left:6px;">必須</span></label>
+        <input type="text" id="prod_name" placeholder="例：エグゼクティブアンビル">
+        <label>商品説明 <span class="badge recommended" style="margin-left:6px;">推奨</span></label>
+        <textarea id="prod_description" placeholder="商品ページに記載されている説明文をそのまま入力"></textarea>
+        <label>商品管理番号（SKU） <span class="badge recommended" style="margin-left:6px;">推奨</span></label>
+        <input type="text" id="prod_sku" placeholder="例：0446310786">
+        <label>ブランド名 <span class="badge recommended" style="margin-left:6px;">推奨</span></label>
+        <input type="text" id="prod_brand" placeholder="例：ACME">
+      </section>
+
+      <section class="field-group">
+        <h2>商品画像 <span class="badge recommended">推奨</span></h2>
+        <p class="desc">クロール可能な画像URLを入力（複数可。16:9・4:3・1:1推奨）。</p>
+        <div class="repeat-list" id="prod_imageList"></div>
+        <button class="add-btn" onclick="addRepeatRow('prod_imageList','prod_img','https://example.com/photo.jpg')">＋ 画像URLを追加</button>
+      </section>
+
+      <div style="background:#fff; border:1px solid var(--line); border-radius:10px; padding:16px 20px; margin-bottom:16px;">
+        <strong style="font-size:13px;">下記3つのうち、最低1つの入力が必須です</strong>
+        <p style="font-size:12px; color:var(--ink-soft); margin:4px 0 0;">review / aggregateRating / offers のいずれか1つ。</p>
+      </div>
+
+      <section class="field-group">
+        <div class="toggle-row" id="toggleOffers" onclick="toggleSection('offers')">
+          <h2 style="margin:0;">販売条件（Offer）</h2><div class="switch"></div>
+        </div>
+        <div class="sub-panel" id="panel-offers">
+          <label>価格</label>
+          <div class="grid2">
+            <input type="number" id="prod_offerPrice" placeholder="例：12800">
+            <select id="prod_offerCurrency">
+              <option value="JPY">JPY（日本円）</option><option value="USD">USD</option><option value="EUR">EUR</option>
+            </select>
+          </div>
+          <label>在庫状況</label>
+          <select id="prod_offerAvailability">
+            <option value="InStock">在庫あり</option><option value="OutOfStock">在庫なし</option>
+            <option value="PreOrder">予約受付中</option><option value="LimitedAvailability">在庫わずか</option>
+            <option value="Discontinued">販売終了</option>
+          </select>
+          <label>価格有効期限</label>
+          <input type="date" id="prod_offerValidUntil">
+          <label>商品ページURL</label>
+          <input type="url" id="prod_offerUrl" placeholder="https://example.com/product">
+        </div>
+      </section>
+
+      <section class="field-group">
+        <div class="toggle-row" id="toggleRating" onclick="toggleSection('rating')">
+          <h2 style="margin:0;">総合評価（AggregateRating）</h2><div class="switch"></div>
+        </div>
+        <div class="sub-panel" id="panel-rating">
+          <label>平均評価値</label><input type="number" id="prod_ratingValue" step="0.1" placeholder="例：4.4">
+          <label>レビュー件数</label><input type="number" id="prod_reviewCount" placeholder="例：89">
+        </div>
+      </section>
+
+      <section class="field-group">
+        <div class="toggle-row" id="toggleReview" onclick="toggleSection('review')">
+          <h2 style="margin:0;">個別レビュー（Review）</h2><div class="switch"></div>
+        </div>
+        <p class="desc">評価者名は実在の個人名・チーム名を入力（宣伝文言は不可）。</p>
+        <div class="sub-panel" id="panel-review">
+          <label>評価者名</label><input type="text" id="prod_reviewAuthor" placeholder="例：山田太郎">
+          <label>評価値（5点満点）</label><input type="number" id="prod_reviewRating" min="1" max="5" placeholder="例：4">
+        </div>
+      </section>
+    `,
+    init: () => { addRepeatRow('prod_imageList','prod_img',''); },
+    build: () => {
+      const obj = { "@context": "https://schema.org/", "@type": "Product" };
+      const set = (key, id) => { const v = val(id); if (v) obj[key] = v; };
+      set('name','prod_name'); set('description','prod_description'); set('sku','prod_sku');
+      if (val('prod_brand')) obj.brand = { "@type": "Brand", "name": val('prod_brand') };
+
+      const images = collectRepeatValues('prod_imageList');
+      if (images.length) obj.image = images.length === 1 ? images[0] : images;
+
+      const offersOn = document.getElementById('toggleOffers')?.classList.contains('on');
+      const ratingOn = document.getElementById('toggleRating')?.classList.contains('on');
+      const reviewOn = document.getElementById('toggleReview')?.classList.contains('on');
+
+      if (offersOn && val('prod_offerPrice')) {
+        const offer = { "@type": "Offer", "price": Number(val('prod_offerPrice')), "priceCurrency": val('prod_offerCurrency') };
+        if (val('prod_offerAvailability')) offer.availability = "https://schema.org/" + val('prod_offerAvailability');
+        if (val('prod_offerValidUntil')) offer.priceValidUntil = val('prod_offerValidUntil');
+        if (val('prod_offerUrl')) offer.url = val('prod_offerUrl');
+        obj.offers = offer;
+      }
+      if (ratingOn && (val('prod_ratingValue') || val('prod_reviewCount'))) {
+        obj.aggregateRating = { "@type": "AggregateRating" };
+        if (val('prod_ratingValue')) obj.aggregateRating.ratingValue = Number(val('prod_ratingValue'));
+        if (val('prod_reviewCount')) obj.aggregateRating.reviewCount = Number(val('prod_reviewCount'));
+      }
+      if (reviewOn && (val('prod_reviewAuthor') || val('prod_reviewRating'))) {
+        obj.review = { "@type": "Review" };
+        if (val('prod_reviewAuthor')) obj.review.author = { "@type": "Person", "name": val('prod_reviewAuthor') };
+        if (val('prod_reviewRating')) obj.review.reviewRating = { "@type": "Rating", "ratingValue": Number(val('prod_reviewRating')), "bestRating": 5 };
+      }
+      return obj;
+    },
+    validate: (obj) => {
+      const errors = [];
+      if (!obj.name) errors.push('商品名（必須）が未入力です。');
+      if (!(obj.offers || obj.aggregateRating || obj.review)) errors.push('review / aggregateRating / offers のいずれか1つも入力されていません（最低1つ必須）。');
+      if (obj.offers && !obj.offers.price) errors.push('販売条件セクションはONですが、価格が未入力です。');
+      return errors;
+    }
+  },
+
+  localbusiness: {
+    label: "LocalBusiness",
+    scope: "ページ単位（店舗・拠点ごと）",
+    banner: "実店舗・拠点ページに1回実装します。Google公式：name と address が必須。LocalBusinessはOrganizationのサブタイプのため、Organizationタブの項目も参考にしてください。",
+    render: () => `
+      <section class="field-group">
+        <h2>基本情報 <span class="badge required">必須</span></h2>
+        <label>店舗名（name） <span class="badge required" style="margin-left:6px;">必須</span></label>
+        <input type="text" id="lb_name" placeholder="例：Example Restaurant 六本木店">
+        <label>店舗ページURL（url） <span class="badge recommended" style="margin-left:6px;">推奨</span></label>
+        <input type="url" id="lb_url" placeholder="https://example.com/stores/roppongi">
+        <label>電話番号（telephone） <span class="badge recommended" style="margin-left:6px;">推奨</span></label>
+        <input type="tel" id="lb_telephone" placeholder="+81-3-9999-9999">
+        <label>価格帯（priceRange） <span class="badge recommended" style="margin-left:6px;">推奨</span><span class="hint">例：¥¥¥、100文字未満</span></label>
+        <input type="text" id="lb_priceRange" placeholder="¥¥¥">
+      </section>
+
+      <section class="field-group">
+        <h2>住所（address） <span class="badge required">必須</span></h2>
+        <div class="grid2">
+          <div><label>郵便番号</label><input type="text" id="lb_postalCode" placeholder="105-0001"></div>
+          <div><label>国コード（2文字）</label><input type="text" id="lb_addressCountry" placeholder="JP"></div>
+        </div>
+        <label>都道府県</label><input type="text" id="lb_addressRegion" placeholder="東京都">
+        <label>市区町村</label><input type="text" id="lb_addressLocality" placeholder="港区">
+        <label>番地</label><input type="text" id="lb_streetAddress" placeholder="六本木1-2-3">
+      </section>
+
+      <section class="field-group">
+        <h2>店舗画像 <span class="badge recommended">推奨</span></h2>
+        <div class="repeat-list" id="lb_imageList"></div>
+        <button class="add-btn" onclick="addRepeatRow('lb_imageList','lb_img','https://example.com/photo.jpg')">＋ 画像URLを追加</button>
+      </section>
+
+      <section class="field-group">
+        <h2>位置情報（geo） <span class="badge recommended">推奨</span></h2>
+        <div class="grid2">
+          <div><label>緯度</label><input type="text" id="lb_lat" placeholder="35.65858"></div>
+          <div><label>経度</label><input type="text" id="lb_lng" placeholder="139.74543"></div>
+        </div>
+      </section>
+
+      <section class="field-group">
+        <h2>営業時間（openingHoursSpecification） <span class="badge recommended">推奨</span></h2>
+        <p class="desc">曜日ごとにグループを追加してください（例：月〜金と土日で分ける）。</p>
+        <div id="lb_hoursList"></div>
+        <button class="add-btn" onclick="addLbHoursRow()">＋ 営業時間グループを追加</button>
+      </section>
+
+      <section class="field-group">
+        <h2>飲食店向け情報 <span class="badge recommended">推奨</span></h2>
+        <label>メニューURL（menu）</label>
+        <input type="url" id="lb_menu" placeholder="https://example.com/menu">
+        <label>提供料理（servesCuisine）</label>
+        <input type="text" id="lb_cuisine" placeholder="例：Japanese">
+      </section>
+
+      <section class="field-group">
+        <div class="toggle-row" id="toggleLbReview" onclick="toggleSection('LbReview')">
+          <h2 style="margin:0;">レビュー・総合評価</h2><div class="switch"></div>
+        </div>
+        <p class="desc">※他のローカルビジネスに関するレビューを掲載しているサイトにのみ推奨。自社の実店舗に自社レビューを載せる用途では使わないこと。</p>
+        <div class="sub-panel" id="panel-LbReview">
+          <label>平均評価値</label><input type="number" id="lb_ratingValue" step="0.1" placeholder="例：4.2">
+          <label>レビュー件数</label><input type="number" id="lb_reviewCount" placeholder="例：34">
+        </div>
+      </section>
+    `,
+    init: () => { addRepeatRow('lb_imageList','lb_img',''); document.getElementById('lb_hoursList').innerHTML=''; addLbHoursRow(); },
+    build: () => {
+      const obj = { "@context": "https://schema.org", "@type": "LocalBusiness" };
+      const set = (key, id) => { const v = val(id); if (v) obj[key] = v; };
+      set('name','lb_name'); set('url','lb_url'); set('telephone','lb_telephone'); set('priceRange','lb_priceRange');
+      set('menu','lb_menu'); set('servesCuisine','lb_cuisine');
+
+      const addr = {};
+      const addrMap = { streetAddress:'lb_streetAddress', addressLocality:'lb_addressLocality', addressRegion:'lb_addressRegion', postalCode:'lb_postalCode', addressCountry:'lb_addressCountry' };
+      Object.entries(addrMap).forEach(([k,id]) => { const v = val(id); if (v) addr[k] = v; });
+      if (Object.keys(addr).length) { addr["@type"] = "PostalAddress"; obj.address = addr; }
+
+      if (val('lb_lat') && val('lb_lng')) {
+        obj.geo = { "@type": "GeoCoordinates", "latitude": Number(val('lb_lat')), "longitude": Number(val('lb_lng')) };
+      }
+
+      const images = collectRepeatValues('lb_imageList');
+      if (images.length) obj.image = images.length === 1 ? images[0] : images;
+
+      const hoursGroups = collectLbHours();
+      if (hoursGroups.length) obj.openingHoursSpecification = hoursGroups;
+
+      const reviewOn = document.getElementById('toggleLbReview')?.classList.contains('on');
+      if (reviewOn && (val('lb_ratingValue') || val('lb_reviewCount'))) {
+        obj.aggregateRating = { "@type": "AggregateRating" };
+        if (val('lb_ratingValue')) obj.aggregateRating.ratingValue = Number(val('lb_ratingValue'));
+        if (val('lb_reviewCount')) obj.aggregateRating.reviewCount = Number(val('lb_reviewCount'));
+      }
+      return obj;
+    },
+    validate: (obj) => {
+      const errors = [];
+      if (!obj.name) errors.push('店舗名（name）が未入力です（必須）。');
+      if (!obj.address) errors.push('住所（address）が未入力です（必須）。');
+      return errors;
+    }
+  },
+
+  jobposting: {
+    label: "JobPosting",
+    scope: "ページ単位（求人票ごと）",
+    banner: "個別の求人票ページに1回実装します（求人一覧ページには使用不可）。title / description / hiringOrganization / datePosted は必須。jobLocationは完全リモート以外は必須。",
+    render: () => `
+      <section class="field-group">
+        <h2>基本情報 <span class="badge required">必須</span></h2>
+        <label>職務名（title） <span class="badge required" style="margin-left:6px;">必須</span><span class="hint">職種名のみ。会社名・給与・住所を含めない</span></label>
+        <input type="text" id="job_title" placeholder="例：ソフトウェアエンジニア">
+        <label>職務内容（description） <span class="badge required" style="margin-left:6px;">必須</span><span class="hint">業務内容・資格・スキル・勤務時間等を網羅</span></label>
+        <textarea id="job_description" placeholder="職務内容の詳細"></textarea>
+        <label>掲載日（datePosted） <span class="badge required" style="margin-left:6px;">必須</span></label>
+        <input type="date" id="job_datePosted">
+        <label>掲載終了日（validThrough） <span class="badge recommended" style="margin-left:6px;">終了日がある場合は必須</span></label>
+        <input type="date" id="job_validThrough">
+      </section>
+
+      <section class="field-group">
+        <h2>採用組織（hiringOrganization） <span class="badge required">必須</span></h2>
+        <label>会社名</label>
+        <input type="text" id="job_orgName" placeholder="例：株式会社Example">
+        <label>会社サイトURL（sameAs）</label>
+        <input type="url" id="job_orgSameAs" placeholder="https://www.example.co.jp">
+        <label>ロゴURL</label>
+        <input type="url" id="job_orgLogo" placeholder="https://www.example.co.jp/logo.png">
+      </section>
+
+      <section class="field-group">
+        <div class="toggle-row" id="toggleJobRemote" onclick="toggleSection('JobRemote')">
+          <h2 style="margin:0;">完全リモート勤務ですか？</h2><div class="switch"></div>
+        </div>
+        <div class="sub-panel" id="panel-JobRemote">
+          <label>リモート勤務者が居住可能な国・地域（applicantLocationRequirements）</label>
+          <input type="text" id="job_locReq" placeholder="例：JP">
+        </div>
+      </section>
+
+      <section class="field-group">
+        <h2>勤務地（jobLocation） <span class="badge required">条件付き必須（リモート以外）</span></h2>
+        <div class="grid2">
+          <div><label>都道府県</label><input type="text" id="job_locRegion" placeholder="東京都"></div>
+          <div><label>国コード（addressCountry）</label><input type="text" id="job_locCountry" placeholder="JP"></div>
+        </div>
+        <label>市区町村</label><input type="text" id="job_locLocality" placeholder="港区">
+        <label>番地</label><input type="text" id="job_locStreet" placeholder="〇〇1-2-3">
+      </section>
+
+      <section class="field-group">
+        <h2>雇用形態（employmentType） <span class="badge recommended">推奨</span></h2>
+        <div style="display:flex; flex-wrap:wrap; gap:10px;">
+          <label style="display:inline-flex; align-items:center; gap:4px; font-weight:400; margin:0;"><input type="checkbox" class="job_empType" value="FULL_TIME" onchange="render()"> 正社員</label>
+          <label style="display:inline-flex; align-items:center; gap:4px; font-weight:400; margin:0;"><input type="checkbox" class="job_empType" value="PART_TIME" onchange="render()"> パート・アルバイト</label>
+          <label style="display:inline-flex; align-items:center; gap:4px; font-weight:400; margin:0;"><input type="checkbox" class="job_empType" value="CONTRACTOR" onchange="render()"> 契約社員</label>
+          <label style="display:inline-flex; align-items:center; gap:4px; font-weight:400; margin:0;"><input type="checkbox" class="job_empType" value="TEMPORARY" onchange="render()"> 臨時雇用</label>
+          <label style="display:inline-flex; align-items:center; gap:4px; font-weight:400; margin:0;"><input type="checkbox" class="job_empType" value="INTERN" onchange="render()"> インターン</label>
+          <label style="display:inline-flex; align-items:center; gap:4px; font-weight:400; margin:0;"><input type="checkbox" class="job_empType" value="VOLUNTEER" onchange="render()"> ボランティア</label>
+          <label style="display:inline-flex; align-items:center; gap:4px; font-weight:400; margin:0;"><input type="checkbox" class="job_empType" value="PER_DIEM" onchange="render()"> 日雇い</label>
+          <label style="display:inline-flex; align-items:center; gap:4px; font-weight:400; margin:0;"><input type="checkbox" class="job_empType" value="OTHER" onchange="render()"> その他</label>
+        </div>
+      </section>
+
+      <section class="field-group">
+        <h2>給与（baseSalary） <span class="badge recommended">推奨</span></h2>
+        <div class="grid2">
+          <div><label>最低額</label><input type="number" id="job_salaryMin" placeholder="例：4000000"></div>
+          <div><label>最高額</label><input type="number" id="job_salaryMax" placeholder="例：6000000"></div>
+        </div>
+        <div class="grid2">
+          <div><label>通貨</label>
+            <select id="job_salaryCurrency"><option value="JPY">JPY</option><option value="USD">USD</option></select>
+          </div>
+          <div><label>単位</label>
+            <select id="job_salaryUnit">
+              <option value="YEAR">年</option><option value="MONTH">月</option><option value="WEEK">週</option>
+              <option value="DAY">日</option><option value="HOUR">時間</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <section class="field-group">
+        <h2>その他 <span class="badge recommended">推奨</span></h2>
+        <label>求人管理ID（identifier）</label>
+        <input type="text" id="job_identifier" placeholder="例：REQ-2026-001">
+        <label style="display:flex; align-items:center; gap:6px;">
+          <input type="checkbox" id="job_directApply" onchange="render()" style="width:auto;"> 直接応募が可能（directApply）
+        </label>
+      </section>
+    `,
+    build: () => {
+      const obj = { "@context": "https://schema.org/", "@type": "JobPosting" };
+      const set = (key, id) => { const v = val(id); if (v) obj[key] = v; };
+      set('title','job_title'); set('description','job_description');
+      set('datePosted','job_datePosted'); set('validThrough','job_validThrough');
+      set('identifier','job_identifier');
+
+      const org = {};
+      if (val('job_orgName')) org.name = val('job_orgName');
+      if (val('job_orgSameAs')) org.sameAs = val('job_orgSameAs');
+      if (val('job_orgLogo')) org.logo = val('job_orgLogo');
+      if (Object.keys(org).length) { org["@type"] = "Organization"; obj.hiringOrganization = org; }
+
+      const remoteOn = document.getElementById('toggleJobRemote')?.classList.contains('on');
+      if (remoteOn) {
+        obj.jobLocationType = "TELECOMMUTE";
+        if (val('job_locReq')) obj.applicantLocationRequirements = { "@type": "Country", "name": val('job_locReq') };
+      }
+
+      const loc = {};
+      const locMap = { streetAddress:'job_locStreet', addressLocality:'job_locLocality', addressRegion:'job_locRegion', addressCountry:'job_locCountry' };
+      Object.entries(locMap).forEach(([k,id]) => { const v = val(id); if (v) loc[k] = v; });
+      if (Object.keys(loc).length) {
+        obj.jobLocation = { "@type": "Place", "address": Object.assign({ "@type": "PostalAddress" }, loc) };
+      }
+
+      const empTypes = Array.from(document.querySelectorAll('.job_empType:checked')).map(c => c.value);
+      if (empTypes.length) obj.employmentType = empTypes.length === 1 ? empTypes[0] : empTypes;
+
+      if (val('job_salaryMin') || val('job_salaryMax')) {
+        const value = { "@type": "QuantitativeValue" };
+        if (val('job_salaryMin')) value.minValue = Number(val('job_salaryMin'));
+        if (val('job_salaryMax')) value.maxValue = Number(val('job_salaryMax'));
+        value.unitText = val('job_salaryUnit');
+        obj.baseSalary = { "@type": "MonetaryAmount", "currency": val('job_salaryCurrency'), "value": value };
+      }
+
+      if (document.getElementById('job_directApply')?.checked) obj.directApply = true;
+
+      return obj;
+    },
+    validate: (obj) => {
+      const errors = [];
+      if (!obj.title) errors.push('職務名（title）が未入力です（必須）。');
+      if (!obj.description) errors.push('職務内容（description）が未入力です（必須）。');
+      if (!obj.hiringOrganization || !obj.hiringOrganization.name) errors.push('採用組織名が未入力です（必須）。');
+      if (!obj.datePosted) errors.push('掲載日（datePosted）が未入力です（必須）。');
+      if (obj.jobLocationType !== 'TELECOMMUTE' && !obj.jobLocation) errors.push('リモート勤務でない場合、勤務地（jobLocation）が必須です。');
+      return errors;
+    }
+  },
+
+  qapage: {
+    label: "QAPage",
+    scope: "ページ単位（Q&Aページごと）",
+    banner: "1つの質問に対しユーザーが複数回答を投稿できるページに実装します。サイト運営者が作成し他の回答を受け付けないFAQには使用不可（FAQPageは2026年5月に廃止済み）。",
+    render: () => `
+      <section class="field-group">
+        <h2>質問（Question） <span class="badge required">必須</span></h2>
+        <label>質問の全文（短文） <span class="badge required" style="margin-left:6px;">必須</span></label>
+        <input type="text" id="qa_qName" placeholder="例：1ポンドは何オンスですか？">
+        <label>質問の全文（長文） <span class="badge recommended" style="margin-left:6px;">推奨</span></label>
+        <textarea id="qa_qText" placeholder="質問の詳細"></textarea>
+        <label>質問者名 <span class="badge recommended" style="margin-left:6px;">推奨</span></label>
+        <input type="text" id="qa_qAuthor" placeholder="例：山田太郎">
+        <label>質問者プロフィールURL <span class="badge recommended" style="margin-left:6px;">推奨</span></label>
+        <input type="url" id="qa_qAuthorUrl" placeholder="https://example.com/profiles/yamada">
+      </section>
+
+      <section class="field-group">
+        <h2>ベストアンサー（acceptedAnswer） <span class="badge required">必須（最低1回答）</span></h2>
+        <label>回答全文 <span class="badge required" style="margin-left:6px;">必須</span></label>
+        <textarea id="qa_aText" placeholder="回答の全文"></textarea>
+        <label>回答者名 <span class="badge recommended" style="margin-left:6px;">推奨</span></label>
+        <input type="text" id="qa_aAuthor" placeholder="例：鈴木一郎">
+        <label>回答者プロフィールURL <span class="badge recommended" style="margin-left:6px;">推奨</span></label>
+        <input type="url" id="qa_aAuthorUrl" placeholder="https://example.com/profiles/suzuki">
+        <label>回答への直接リンクURL <span class="badge recommended" style="margin-left:6px;">強く推奨</span></label>
+        <input type="url" id="qa_aUrl" placeholder="https://example.com/question1#acceptedAnswer">
+      </section>
+
+      <section class="field-group">
+        <h2>その他の回答（suggestedAnswer） <span class="badge recommended">推奨</span></h2>
+        <p class="desc">ベストアンサー以外の候補回答があれば追加してください。</p>
+        <div id="qa_suggestedList"></div>
+        <button class="add-btn" onclick="addQaSuggested()">＋ 候補回答を追加</button>
+      </section>
+
+      <section class="field-group">
+        <h2>回答総数（answerCount） <span class="badge required">必須</span></h2>
+        <p class="desc">自動計算されますが、ページネーション等で実際の総数と異なる場合は手動で上書きしてください。</p>
+        <input type="number" id="qa_answerCount" placeholder="自動計算">
+      </section>
+    `,
+    init: () => { document.getElementById('qa_suggestedList').innerHTML=''; },
+    build: () => {
+      const obj = { "@context": "https://schema.org", "@type": "QAPage" };
+      const q = { "@type": "Question" };
+      if (val('qa_qName')) q.name = val('qa_qName');
+      if (val('qa_qText')) q.text = val('qa_qText');
+      if (val('qa_qAuthor')) {
+        q.author = { "@type": "Person", "name": val('qa_qAuthor') };
+        if (val('qa_qAuthorUrl')) q.author.url = val('qa_qAuthorUrl');
+      }
+
+      if (val('qa_aText')) {
+        const accepted = { "@type": "Answer", "text": val('qa_aText') };
+        if (val('qa_aAuthor')) {
+          accepted.author = { "@type": "Person", "name": val('qa_aAuthor') };
+          if (val('qa_aAuthorUrl')) accepted.author.url = val('qa_aAuthorUrl');
+        }
+        if (val('qa_aUrl')) accepted.url = val('qa_aUrl');
+        q.acceptedAnswer = accepted;
+      }
+
+      const suggestedRows = Array.from(document.querySelectorAll('#qa_suggestedList .qa-suggested-row'));
+      const suggested = suggestedRows.map(row => {
+        const text = row.querySelector('.qa-sugg-text')?.value.trim();
+        const author = row.querySelector('.qa-sugg-author')?.value.trim();
+        if (!text) return null;
+        const a = { "@type": "Answer", "text": text };
+        if (author) a.author = { "@type": "Person", "name": author };
+        return a;
+      }).filter(Boolean);
+      if (suggested.length) q.suggestedAnswer = suggested.length === 1 ? suggested[0] : suggested;
+
+      const autoCount = (q.acceptedAnswer ? 1 : 0) + suggested.length;
+      const manualCount = val('qa_answerCount');
+      q.answerCount = manualCount !== '' ? Number(manualCount) : autoCount;
+
+      obj.mainEntity = q;
+      return obj;
+    },
+    validate: (obj) => {
+      const errors = [];
+      const q = obj.mainEntity || {};
+      if (!q.name) errors.push('質問の全文（短文）が未入力です（必須）。');
+      if (!q.acceptedAnswer && !q.suggestedAnswer) errors.push('回答が1件も入力されていません（最低1件必須）。');
+      if (q.answerCount === undefined || q.answerCount === null) errors.push('回答総数（answerCount）が未設定です（必須）。');
+      return errors;
+    }
+  },
+
+  recipe: {
+    label: "Recipe",
+    scope: "ページ単位（レシピごと）",
+    banner: "特定の料理の作り方ページに実装します。name と image が必須。",
+    render: () => `
+      <section class="field-group">
+        <h2>基本情報 <span class="badge required">必須</span></h2>
+        <label>レシピ名（name） <span class="badge required" style="margin-left:6px;">必須</span></label>
+        <input type="text" id="rc_name" placeholder="例：ノンアルコール・ピニャコラーダ">
+        <label>説明（description） <span class="badge recommended" style="margin-left:6px;">推奨</span></label>
+        <textarea id="rc_description" placeholder="料理の要約文"></textarea>
+        <label>作成者（author） <span class="badge recommended" style="margin-left:6px;">推奨</span></label>
+        <input type="text" id="rc_author" placeholder="例：山田花子">
+      </section>
+
+      <section class="field-group">
+        <h2>完成写真（image） <span class="badge required">必須</span></h2>
+        <div class="repeat-list" id="rc_imageList"></div>
+        <button class="add-btn" onclick="addRepeatRow('rc_imageList','rc_img','https://example.com/photo.jpg')">＋ 画像URLを追加</button>
+      </section>
+
+      <section class="field-group">
+        <h2>時間（分単位で入力） <span class="badge recommended">推奨</span></h2>
+        <p class="desc">入力した分数から自動でISO 8601形式に変換されます。prepTimeとcookTimeはセットで使うか、totalTimeのみ使ってください。</p>
+        <div class="grid3">
+          <div><label>準備時間（分）</label><input type="number" id="rc_prepMin" placeholder="例：10"></div>
+          <div><label>調理時間（分）</label><input type="number" id="rc_cookMin" placeholder="例：20"></div>
+          <div><label>合計時間（分）</label><input type="number" id="rc_totalMin" placeholder="例：30"></div>
+        </div>
+      </section>
+
+      <section class="field-group">
+        <h2>分類・栄養 <span class="badge recommended">推奨</span></h2>
+        <div class="grid2">
+          <div><label>分量（recipeYield）</label><input type="text" id="rc_yield" placeholder="例：4人分"></div>
+          <div><label>1人分のカロリー</label><input type="number" id="rc_calories" placeholder="例：250"></div>
+        </div>
+        <div class="grid2">
+          <div><label>料理カテゴリ（recipeCategory）</label><input type="text" id="rc_category" placeholder="例：ドリンク"></div>
+          <div><label>地域（recipeCuisine）</label><input type="text" id="rc_cuisine" placeholder="例：アメリカ料理"></div>
+        </div>
+        <label>キーワード（keywords） <span class="hint">カンマ区切り。recipeCategory/Cuisineと重複させない</span></label>
+        <input type="text" id="rc_keywords" placeholder="例：夏, さっぱり">
+      </section>
+
+      <section class="field-group">
+        <h2>材料（recipeIngredient） <span class="badge recommended">推奨</span></h2>
+        <div class="repeat-list" id="rc_ingredientList"></div>
+        <button class="add-btn" onclick="addRepeatTextRow('rc_ingredientList','rc_ing','例：パイナップルジュース 400ml')">＋ 材料を追加</button>
+      </section>
+
+      <section class="field-group">
+        <h2>作り方（recipeInstructions） <span class="badge recommended">推奨</span></h2>
+        <p class="desc">「手順1」等の連番テキストは含めず、行動の説明のみを入力してください。</p>
+        <div id="rc_stepsList"></div>
+        <button class="add-btn" onclick="addRcStep()">＋ 手順を追加</button>
+      </section>
+
+      <section class="field-group">
+        <div class="toggle-row" id="toggleRcRating" onclick="toggleSection('RcRating')">
+          <h2 style="margin:0;">総合評価（AggregateRating）</h2><div class="switch"></div>
+        </div>
+        <p class="desc">評価者名は実在の個人名・組織名を使用（宣伝文言は不可）。</p>
+        <div class="sub-panel" id="panel-RcRating">
+          <label>平均評価値</label><input type="number" id="rc_ratingValue" step="0.1" placeholder="例：4.7">
+          <label>評価件数</label><input type="number" id="rc_ratingCount" placeholder="例：123">
+        </div>
+      </section>
+
+      <section class="field-group">
+        <div class="toggle-row" id="toggleRcVideo" onclick="toggleSection('RcVideo')">
+          <h2 style="margin:0;">調理動画（video）</h2><div class="switch"></div>
+        </div>
+        <div class="sub-panel" id="panel-RcVideo">
+          <label>動画タイトル</label><input type="text" id="rc_videoName" placeholder="例：作り方動画">
+          <label>動画URL</label><input type="url" id="rc_videoUrl" placeholder="https://example.com/video.mp4">
+        </div>
+      </section>
+    `,
+    init: () => {
+      addRepeatRow('rc_imageList','rc_img','');
+      document.getElementById('rc_ingredientList').innerHTML=''; addRepeatTextRow('rc_ingredientList','rc_ing','');
+      document.getElementById('rc_stepsList').innerHTML=''; addRcStep();
+    },
+    build: () => {
+      const obj = { "@context": "https://schema.org/", "@type": "Recipe" };
+      const set = (key, id) => { const v = val(id); if (v) obj[key] = v; };
+      set('name','rc_name'); set('description','rc_description');
+      if (val('rc_author')) obj.author = { "@type": "Person", "name": val('rc_author') };
+
+      const images = collectRepeatValues('rc_imageList');
+      if (images.length) obj.image = images.length === 1 ? images[0] : images;
+
+      if (val('rc_prepMin')) obj.prepTime = minutesToISODuration(Number(val('rc_prepMin')));
+      if (val('rc_cookMin')) obj.cookTime = minutesToISODuration(Number(val('rc_cookMin')));
+      if (val('rc_totalMin')) obj.totalTime = minutesToISODuration(Number(val('rc_totalMin')));
+
+      set('recipeYield','rc_yield'); set('recipeCategory','rc_category'); set('recipeCuisine','rc_cuisine');
+      if (val('rc_keywords')) obj.keywords = val('rc_keywords');
+      if (val('rc_calories')) obj.nutrition = { "@type": "NutritionInformation", "calories": val('rc_calories') + ' calories' };
+
+      const ingredients = Array.from(document.querySelectorAll('#rc_ingredientList input')).map(i => i.value.trim()).filter(Boolean);
+      if (ingredients.length) obj.recipeIngredient = ingredients;
+
+      const steps = Array.from(document.querySelectorAll('#rc_stepsList .rc-step-row')).map(row => {
+        const name = row.querySelector('.rc-step-name')?.value.trim();
+        const text = row.querySelector('.rc-step-text')?.value.trim();
+        if (!text) return null;
+        const step = { "@type": "HowToStep", "text": text };
+        if (name) step.name = name;
+        return step;
+      }).filter(Boolean);
+      if (steps.length) obj.recipeInstructions = steps;
+
+      const ratingOn = document.getElementById('toggleRcRating')?.classList.contains('on');
+      if (ratingOn && (val('rc_ratingValue') || val('rc_ratingCount'))) {
+        obj.aggregateRating = { "@type": "AggregateRating" };
+        if (val('rc_ratingValue')) obj.aggregateRating.ratingValue = Number(val('rc_ratingValue'));
+        if (val('rc_ratingCount')) obj.aggregateRating.ratingCount = Number(val('rc_ratingCount'));
+      }
+
+      const videoOn = document.getElementById('toggleRcVideo')?.classList.contains('on');
+      if (videoOn && (val('rc_videoName') || val('rc_videoUrl'))) {
+        obj.video = { "@type": "VideoObject" };
+        if (val('rc_videoName')) obj.video.name = val('rc_videoName');
+        if (val('rc_videoUrl')) obj.video.contentUrl = val('rc_videoUrl');
+      }
+
+      return obj;
+    },
+    validate: (obj) => {
+      const errors = [];
+      if (!obj.name) errors.push('レシピ名（name）が未入力です（必須）。');
+      if (!obj.image) errors.push('完成写真（image）が未入力です（必須、最低1枚）。');
+      return errors;
+    }
+  },
+
+  profilepage: {
+    label: "ProfilePage",
+    scope: "ページ単位（著者・投稿者ごと）",
+    banner: "記事・レシピの著者、フォーラム・Q&Aの投稿者ページに実装します。mainEntity（Person）が必須。",
+    render: () => `
+      <section class="field-group">
+        <h2>基本情報（Person） <span class="badge required">必須（mainEntityとして）</span></h2>
+        <label>氏名（name）</label>
+        <input type="text" id="pp_name" placeholder="例：山田太郎">
+        <label>ハンドルネーム（alternateName）</label>
+        <input type="text" id="pp_altName" placeholder="例：yamada_taro">
+        <label>サイト内の識別子（identifier）</label>
+        <input type="text" id="pp_identifier" placeholder="例：123475623">
+        <label>自己紹介（description）</label>
+        <textarea id="pp_description" placeholder="例：編集記者。テクノロジー分野を担当。"></textarea>
+        <label>プロフィール画像URL（image）</label>
+        <input type="url" id="pp_image" placeholder="https://example.com/avatars/yamada.jpg">
+      </section>
+
+      <section class="field-group">
+        <h2>sameAs（外部URL） <span class="badge recommended">推奨</span></h2>
+        <p class="desc">本人を一意に示すSNSアカウント等。複数指定可。</p>
+        <div class="repeat-list" id="pp_sameAsList"></div>
+        <button class="add-btn" onclick="addRepeatRow('pp_sameAsList','pp_sameAs','https://twitter.com/example')">＋ URLを追加</button>
+      </section>
+
+      <section class="field-group">
+        <h2>日付情報 <span class="badge recommended">推奨</span></h2>
+        <div class="grid2">
+          <div><label>作成日（dateCreated）</label><input type="date" id="pp_dateCreated"></div>
+          <div><label>更新日（dateModified）</label><input type="date" id="pp_dateModified"></div>
+        </div>
+      </section>
+    `,
+    init: () => { addRepeatRow('pp_sameAsList','pp_sameAs',''); },
+    build: () => {
+      const obj = { "@context": "https://schema.org", "@type": "ProfilePage" };
+      const person = { "@type": "Person" };
+      const set = (key, id) => { const v = val(id); if (v) person[key] = v; };
+      set('name','pp_name'); set('alternateName','pp_altName'); set('identifier','pp_identifier');
+      set('description','pp_description'); set('image','pp_image');
+
+      const sameAs = collectRepeatValues('pp_sameAsList');
+      if (sameAs.length) person.sameAs = sameAs.length === 1 ? sameAs[0] : sameAs;
+
+      obj.mainEntity = person;
+      if (val('pp_dateCreated')) obj.dateCreated = val('pp_dateCreated');
+      if (val('pp_dateModified')) obj.dateModified = val('pp_dateModified');
+      return obj;
+    },
+    validate: (obj) => {
+      const errors = [];
+      if (!obj.mainEntity || !obj.mainEntity.name) errors.push('氏名（mainEntity.name）が未入力です。技術的な必須はmainEntityの存在のみですが、実務上は氏名が必要です。');
+      return errors;
+    }
+  },
+
+  breadcrumblist: {
+    label: "BreadcrumbList",
+    scope: "ページ単位（各ページに設置）",
+    banner: "パンくずリストとしてサイト階層を示します。最低2つの項目が必須。PC版検索結果のみ表示（2025年1月よりモバイル非表示）。",
+    render: () => `
+      <section class="field-group">
+        <h2>パンくず項目（itemListElement） <span class="badge required">必須（最低2項目）</span></h2>
+        <p class="desc">上から順に、トップ階層→現在のページの順で入力してください。最後の項目のURLは省略可（省略時はページ自身のURLが採用されます）。</p>
+        <div id="bc_itemList"></div>
+        <button class="add-btn" onclick="addBcItem()">＋ 項目を追加</button>
+      </section>
+    `,
+    init: () => { document.getElementById('bc_itemList').innerHTML=''; addBcItem(); addBcItem(); },
+    build: () => {
+      const obj = { "@context": "https://schema.org", "@type": "BreadcrumbList" };
+      const rows = Array.from(document.querySelectorAll('#bc_itemList .bc-item-row'));
+      const items = rows.map((row, idx) => {
+        const name = row.querySelector('.bc-item-name')?.value.trim();
+        const url = row.querySelector('.bc-item-url')?.value.trim();
+        if (!name) return null;
+        const item = { "@type": "ListItem", "position": idx + 1, "name": name };
+        if (url) item.item = url;
+        return item;
+      }).filter(Boolean);
+      if (items.length) obj.itemListElement = items;
+      return obj;
+    },
+    validate: (obj) => {
+      const errors = [];
+      const count = (obj.itemListElement || []).length;
+      if (count < 2) errors.push('itemListElementが' + count + '件です。最低2件必要です。');
+      return errors;
+    }
+  }
+
+};
+
+let currentType = 'organization';
+
+function val(id) { const el = document.getElementById(id); return el ? el.value.trim() : ''; }
+
+function addRepeatRow(listId, prefix, placeholder) {
+  const list = document.getElementById(listId);
+  const idx = list.children.length;
+  const inputId = prefix + '_' + idx + '_' + Date.now();
+  const wrap = document.createElement('div');
+  wrap.className = 'repeat-row';
+  const rowId = 'row_' + inputId;
+  wrap.id = rowId;
+  wrap.innerHTML = `
+    <input type="url" id="${inputId}" placeholder="${placeholder || ''}" oninput="render()">
+    <button onclick="removeRow('${rowId}')">削除</button>
+  `;
+  list.appendChild(wrap);
+  render();
+}
+
+function removeRow(rowId) {
+  const el = document.getElementById(rowId);
+  if (el) el.remove();
+  render();
+}
+
+function collectRepeatValues(listId) {
+  const list = document.getElementById(listId);
+  if (!list) return [];
+  return Array.from(list.querySelectorAll('input')).map(i => i.value.trim()).filter(Boolean);
+}
+
+function addRepeatTextRow(listId, prefix, placeholder) {
+  const list = document.getElementById(listId);
+  const idx = list.children.length;
+  const inputId = prefix + '_' + idx + '_' + Date.now();
+  const wrap = document.createElement('div');
+  wrap.className = 'repeat-row';
+  const rowId = 'row_' + inputId;
+  wrap.id = rowId;
+  wrap.innerHTML = `
+    <input type="text" id="${inputId}" placeholder="${placeholder || ''}" oninput="render()">
+    <button onclick="removeRow('${rowId}')">削除</button>
+  `;
+  list.appendChild(wrap);
+  render();
+}
+
+const LB_DAY_OPTIONS = [
+  ['Monday','月'], ['Tuesday','火'], ['Wednesday','水'], ['Thursday','木'],
+  ['Friday','金'], ['Saturday','土'], ['Sunday','日']
+];
+
+function addLbHoursRow() {
+  const list = document.getElementById('lb_hoursList');
+  const rowId = 'lbhours_' + Date.now() + '_' + Math.random().toString(36).slice(2,6);
+  const wrap = document.createElement('div');
+  wrap.id = rowId;
+  wrap.className = 'lb-hours-row';
+  wrap.style.cssText = 'border:1px solid var(--line); border-radius:8px; padding:10px 12px; margin-bottom:8px;';
+  wrap.innerHTML = `
+    <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px;">
+      ${LB_DAY_OPTIONS.map(([en,jp]) => `
+        <label style="display:inline-flex; align-items:center; gap:3px; font-weight:400; margin:0;">
+          <input type="checkbox" class="lb-day" value="${en}" onchange="render()"> ${jp}
+        </label>
+      `).join('')}
+    </div>
+    <div class="grid2">
+      <input type="text" class="lb-opens" placeholder="開店 例:11:00" oninput="render()">
+      <input type="text" class="lb-closes" placeholder="閉店 例:22:00" oninput="render()">
+    </div>
+    <button onclick="document.getElementById('${rowId}').remove(); render();" style="margin-top:6px;">このグループを削除</button>
+  `;
+  list.appendChild(wrap);
+  render();
+}
+
+function collectLbHours() {
+  const list = document.getElementById('lb_hoursList');
+  if (!list) return [];
+  const groups = [];
+  Array.from(list.children).forEach(row => {
+    const days = Array.from(row.querySelectorAll('.lb-day:checked')).map(c => c.value);
+    const opens = row.querySelector('.lb-opens')?.value.trim();
+    const closes = row.querySelector('.lb-closes')?.value.trim();
+    if (days.length && opens && closes) {
+      groups.push({ "@type": "OpeningHoursSpecification", "dayOfWeek": days, "opens": opens, "closes": closes });
+    }
+  });
+  return groups;
+}
+
+function addQaSuggested() {
+  const list = document.getElementById('qa_suggestedList');
+  const rowId = 'qasugg_' + Date.now() + '_' + Math.random().toString(36).slice(2,6);
+  const wrap = document.createElement('div');
+  wrap.className = 'qa-suggested-row';
+  wrap.id = rowId;
+  wrap.style.cssText = 'border:1px solid var(--line); border-radius:8px; padding:10px 12px; margin-bottom:8px;';
+  wrap.innerHTML = `
+    <label style="margin-top:0;">回答テキスト</label>
+    <textarea class="qa-sugg-text" oninput="render()" placeholder="候補回答の全文"></textarea>
+    <label>回答者名</label>
+    <input type="text" class="qa-sugg-author" oninput="render()" placeholder="例：佐藤花子">
+    <button onclick="document.getElementById('${rowId}').remove(); render();" style="margin-top:6px;">この回答を削除</button>
+  `;
+  list.appendChild(wrap);
+  render();
+}
+
+function minutesToISODuration(min) {
+  if (!min || min <= 0) return '';
+  const h = Math.floor(min / 60);
+  const m = min % 60;
+  let out = 'PT';
+  if (h) out += h + 'H';
+  if (m || !h) out += m + 'M';
+  return out;
+}
+
+function addRcStep() {
+  const list = document.getElementById('rc_stepsList');
+  const rowId = 'rcstep_' + Date.now() + '_' + Math.random().toString(36).slice(2,6);
+  const wrap = document.createElement('div');
+  wrap.className = 'rc-step-row';
+  wrap.id = rowId;
+  wrap.style.cssText = 'border:1px solid var(--line); border-radius:8px; padding:10px 12px; margin-bottom:8px;';
+  wrap.innerHTML = `
+    <label style="margin-top:0;">手順の見出し（任意）</label>
+    <input type="text" class="rc-step-name" oninput="render()" placeholder="例：混ぜる">
+    <label>手順の内容</label>
+    <textarea class="rc-step-text" oninput="render()" placeholder="例：パイナップルジュース400mlとココナッツクリーム100mlを混ぜる"></textarea>
+    <button onclick="document.getElementById('${rowId}').remove(); render();" style="margin-top:6px;">この手順を削除</button>
+  `;
+  list.appendChild(wrap);
+  render();
+}
+
+function addArtAuthor() {
+  const list = document.getElementById('art_authorList');
+  const rowId = 'artauthor_' + Date.now() + '_' + Math.random().toString(36).slice(2,6);
+  const wrap = document.createElement('div');
+  wrap.className = 'art-author-row';
+  wrap.id = rowId;
+  wrap.style.cssText = 'border:1px solid var(--line); border-radius:8px; padding:10px 12px; margin-bottom:8px;';
+  wrap.innerHTML = `
+    <div class="grid2">
+      <div><label style="margin-top:0;">氏名・組織名</label><input type="text" class="art-author-name" oninput="render()" placeholder="例：山田太郎"></div>
+      <div><label style="margin-top:0;">種別</label>
+        <select class="art-author-type" onchange="render()">
+          <option value="Person">個人</option>
+          <option value="Organization">組織</option>
+        </select>
+      </div>
+    </div>
+    <label>役職（個人の場合のみ・任意）</label>
+    <input type="text" class="art-author-jobtitle" oninput="render()" placeholder="例：記者">
+    <label>プロフィールURL</label>
+    <input type="url" class="art-author-url" oninput="render()" placeholder="https://example.com/staff/yamada">
+    <button onclick="document.getElementById('${rowId}').remove(); render();" style="margin-top:6px;">この著者を削除</button>
+  `;
+  list.appendChild(wrap);
+  render();
+}
+
+function addBcItem() {
+  const list = document.getElementById('bc_itemList');
+  const rowId = 'bcitem_' + Date.now() + '_' + Math.random().toString(36).slice(2,6);
+  const wrap = document.createElement('div');
+  wrap.className = 'bc-item-row';
+  wrap.id = rowId;
+  wrap.style.cssText = 'display:flex; gap:6px; margin-bottom:6px; align-items:center;';
+  wrap.innerHTML = `
+    <input type="text" class="bc-item-name" oninput="render()" placeholder="表示名（例：トップ）" style="flex:1;">
+    <input type="url" class="bc-item-url" oninput="render()" placeholder="URL（最後の項目は省略可）" style="flex:2;">
+    <button onclick="document.getElementById('${rowId}').remove(); render();">削除</button>
+  `;
+  list.appendChild(wrap);
+  render();
+}
+
+function toggleSection(key) {
+  const row = document.getElementById('toggle' + key.charAt(0).toUpperCase() + key.slice(1));
+  const panel = document.getElementById('panel-' + key);
+  if (!row || !panel) return;
+  row.classList.toggle('on');
+  panel.classList.toggle('show');
+  render();
+}
+
+// 3つのメインタブ構成。「ページタイプ」タブの中だけプルダウンで型を選ぶ。
+const PAGE_TYPE_KEYS = ['article', 'product', 'localbusiness', 'jobposting', 'qapage', 'recipe', 'breadcrumblist'];
+const META_TABS = [
+  { key: 'organization', label: 'Organization', typeKey: 'organization' },
+  { key: 'author',       label: '著者情報',      typeKey: 'profilepage' },
+  { key: 'pagetype',     label: 'ページタイプ',   typeKey: null }
+];
+
+let currentMeta = 'organization';
+let currentPageType = PAGE_TYPE_KEYS[0];
+
+function renderTabs() {
+  const tabWrap = document.getElementById('typeTabs');
+  tabWrap.innerHTML = META_TABS.map(m => {
+    const scopeType = m.typeKey ? TYPES[m.typeKey] : TYPES[currentPageType];
+    return `
+      <button class="type-tab ${m.key === currentMeta ? 'active' : ''}" onclick="switchMeta('${m.key}')">
+        ${m.label}
+        <span class="scope">${m.key === 'pagetype' ? 'ページ単位・型を選択' : scopeType.scope}</span>
+      </button>
+    `;
+  }).join('');
+}
+
+function switchMeta(metaKey) {
+  currentMeta = metaKey;
+  const meta = META_TABS.find(m => m.key === metaKey);
+  currentType = meta.typeKey || currentPageType;
+  renderTabs();
+  renderFormArea();
+}
+
+function changePageType(key) {
+  currentPageType = key;
+  currentType = key;
+  renderTabs();
+  renderFormArea();
+}
+
+function renderFormArea() {
+  const type = TYPES[currentType];
+  const pane = document.getElementById('formPane');
+
+  let selectorHtml = '';
+  if (currentMeta === 'pagetype') {
+    selectorHtml = `
+      <div style="background:#fff; border:1px solid var(--line); border-radius:10px; padding:14px 18px; margin-bottom:16px;">
+        <label style="margin-top:0;">型を選択</label>
+        <select id="pageTypeSelector" onchange="changePageType(this.value)">
+          ${PAGE_TYPE_KEYS.map(k => `<option value="${k}" ${k === currentPageType ? 'selected' : ''}>${TYPES[k].label}（${TYPES[k].scope}）</option>`).join('')}
+        </select>
+      </div>
+    `;
+  }
+
+  pane.innerHTML = selectorHtml + `<div class="type-banner">${type.banner}</div>` + type.render();
+  if (currentMeta === 'pagetype') {
+    const selector = document.getElementById('pageTypeSelector');
+    if (selector) selector.focus();
+  }
+  document.querySelectorAll('#formPane input, #formPane textarea, #formPane select:not(#pageTypeSelector)').forEach(el => {
+    el.addEventListener('input', render);
+    el.addEventListener('change', render);
+  });
+  if (type.init) type.init();
+  render();
+}
+
+function render() {
+  const type = TYPES[currentType];
+  const obj = type.build();
+  document.getElementById('jsonOutput').textContent =
+    '<script type="application/ld+json">\n' + JSON.stringify(obj, null, 2) + '\n<\/script>';
+
+  const errors = type.validate(obj);
+  const box = document.getElementById('validationBox');
+  if (errors.length) {
+    box.innerHTML = `<div class="validation error"><strong>未解決の項目があります</strong><ul>${errors.map(e => '<li>' + e + '</li>').join('')}</ul></div>`;
+  } else {
+    box.innerHTML = `<div class="validation ok">条件を満たしています。表示内容との一致を人間の目で確認してください。</div>`;
+  }
+}
+
+function copyJson() {
+  const text = document.getElementById('jsonOutput').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = 'コピーしました';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'コピー'; btn.classList.remove('copied'); }, 1600);
+  });
+}
+
+renderTabs();
+renderFormArea();
+</script>
+
+</body>
+</html>
