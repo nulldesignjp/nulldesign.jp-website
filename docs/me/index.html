@@ -7,14 +7,14 @@
 </head>
 <body>
 <p id="res"></p>
+<p id="res2"></p>
 <script>
   
 let _ua = navigator.userAgent;
 let _ref = document.referrer;
 
-let _result = _ua + '<br><br>' + _ref;
-
-document.getElementById('res').innerHTML = _result;
+document.getElementById('res').innerHTML = _ua;
+document.getElementById('res2').innerHTML = _ref;
 
 </script>
 
