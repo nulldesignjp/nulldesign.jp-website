@@ -31,7 +31,7 @@ let __ref = _ref.toLowerCase();
 if( __ua.indexOf('android') != -1 && __ua.indexOf('mobile') )
 {
 	//	android mobile
-	if( __ua.indexOf('twitterandroid') != -1 )
+	if( __ua.indexOf('twitterandroid') != -1 || __ref.indexOf('twitter') != -1 || __ref.indexOf('t.co') != -1 )
 	{
 		//	x のアプリ内ブラウザ
 		document.getElementById('res3').innerHTML = 'AndroidのX内ブラウザ環境です';
@@ -43,6 +43,12 @@ if( __ua.indexOf('android') != -1 && __ua.indexOf('mobile') )
 		document.getElementById('res3').innerHTML = 'AndroidのLINE内ブラウザ環境です';
 	}
 }
+
+
+
+//	rifara-
+twitter.android
+
 
 </script>
 
