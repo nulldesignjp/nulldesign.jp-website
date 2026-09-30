@@ -6,13 +6,13 @@
 <title>check.</title>
 <style>
 p{
-	margin-bottom: 1em;
+	margin-bottom: 2em;
 }
 </style>
 </head>
 <body>
-<p id="res">d</p>
-<p id="res2">d</p>
+<p id="res"></p>
+<p id="res2"></p>
 <hr>
 <p id="res3"></p>
 <script>
@@ -22,7 +22,6 @@ let _ref = document.referrer;
 
 document.getElementById('res').innerHTML = _ua;
 document.getElementById('res2').innerHTML = _ref;
-
 
 let __ua = _ua.toLowerCase();
 let __ref = _ref.toLowerCase();
