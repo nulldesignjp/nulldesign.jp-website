@@ -6,6 +6,7 @@
 <title>check.</title>
 </head>
 <body>
+<p id="res"></p>
 <script>
   
 let _ua = navigator.userAgent;
@@ -13,7 +14,7 @@ let _ref = document.referrer;
 
 let _result = _ua + '<br>' + _ref;
 
-document.body.innerHMTL = _ref;
+document.getElementById('res').innerHTML = _ref;
 
 </script>
 
