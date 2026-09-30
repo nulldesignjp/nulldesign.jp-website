@@ -4,17 +4,45 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>check.</title>
+<style>
+p{
+	margin-bottom: 1em;
+}
+</style>
 </head>
 <body>
-<p id="res"></p>
-<p id="res2"></p>
+<p id="res">d</p>
+<p id="res2">d</p>
+<hr>
+<p id="res3"></p>
 <script>
   
 let _ua = navigator.userAgent;
 let _ref = document.referrer;
 
-document.getElementById('res').innerHTML = _ua;
-document.getElementById('res2').innerHTML = _ref;
+document.getElementById('res').innerHTML = 'UA: ' + _ua;
+document.getElementById('res2').innerHTML = 'REF: ' + _ref;
+
+
+let __ua = _ua.toLowerCase();
+let __ref = _ref.toLowerCase();
+
+//	モバイルのAndroid
+if( __ua.indexOf('android') != -1 && __ua.indexOf('mobile') )
+{
+	//	android mobile
+	if( __ua.indexOf('twitterandroid') != -1 )
+	{
+		//	x のアプリ内ブラウザ
+		document.getElementById('res3').innerHTML = 'AndroidのX内ブラウザ環境です';
+	}
+
+	if( __ref.indexOf('line') != -1 )
+	{
+		//	lineのアプリ内ブラウザ
+		document.getElementById('res3').innerHTML = 'AndroidのLINE内ブラウザ環境です';
+	}
+}
 
 </script>
 
