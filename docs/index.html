@@ -3,210 +3,80 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Style-Type" content="text/css">
-<meta http-equiv="Content-Script-Type" content="text/javascript">
-<meta http-equiv="imagetoolbar" content="no">
-<meta http-equiv="cleartype" content="on">
 <meta name="format-detection" content="telephone=no">
-<meta data-hid="keyword" name="keyword" content="">
-<meta data-hid="description" name="description" content="Hiroshi KOI — 日本を拠点に活動するウェブクリエイティブデベロッパー。WebGL/Three.jsを用いたインタラクティブ表現で国内外のアワードを受賞。nulldesign.jpの代表作や習作、受賞歴のポートフォリオ。">
+<meta name="color-scheme" content="light">
 <title>nulldesign.jp - Web Creative Developer / WebGL, WebGPU</title>
-<meta property="og:title" content="nulldesign.jp">
-<meta property="og:description" content="private works.">
-<meta property="og:url" content="https://nulldesign.jp/">
-<meta property="og:type" content="website">
-<meta property="og:image" content="https://nulldesign.jp/ogp.png">
-<meta name="twitter:card" content="summary_large_image">
-<link rel="preload" href="/EBGaramond-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<meta name="description" content="Hiroshi KOI — 日本を拠点に活動するウェブクリエイティブデベロッパー。WebGL/Three.jsを用いたインタラクティブ表現で国内外のアワードを受賞。nulldesign.jpの代表作や習作、受賞歴のポートフォリオ。">
 <link rel="canonical" href="https://nulldesign.jp/">
 <link rel="alternate" hreflang="ja" href="https://nulldesign.jp/">
 <link rel="alternate" hreflang="en" href="https://nulldesign.jp/en/">
 <link rel="alternate" hreflang="x-default" href="https://nulldesign.jp/">
-<style>
-*{
-	box-sizing: border-box;
-}
-@font-face {
-    font-family: 'EB Garamond';
-    src: url('EBGaramond-Regular.woff2') format('woff2');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-body{
-	margin: 0;
-	text-align: center;
-	font-family: sans-serif;
-	font-size: 1em;
-}
-h1,h2,h3{
-  font-family: 'EB Garamond';
-  font-weight: 400;
-	font-size: 1.5em;
-}
-h3{
-	margin-top: 3em;
-}
-h2 + h3{
-	margin-top: 0;
-}
-
-p,ul,li{
-	font-size: 1em;
-}
-nav{
-	position: fixed;
-	right: 32px;
-	top: 16px;
-	margin: 0;
-	padding: 0;
-	line-height: 1;
-	font-size: small;
-	background: rgba(255,255,255,0.75);
-}
-nav a.current{
-	color: #333;
-	text-decoration: none;
-	pointer-events: none;
-}
-
-header,
-footer{
-	padding: 3em 0;
-}
-
-header h1{
-	margin: 0;
-}
-header p{
-	font-size: small;
-	margin: 0.25em 0 0;
-}
-
-header + section{
-	margin-top: 0;
-}
-
-footer p{
-	font-size: small;
-}
-
-section{
-	margin-top: 5em;
-}
-
-#container{
-	margin: 0 auto;
-	padding: 0 20px;
-	max-width: 720px;
-	text-align: left;
-}
-
-.info{}
-.info p{
-	font-size: small;
-}
-
-.profile{}
-.profile p{
-	margin: 0;
-}
-
-.media{}
-.media ol{
-	margin: 0;
-	padding: 0;
-	list-style-type: none;
-}
-
-.media ol li{
-	margin-top: 1em;
-	font-size: small;
-	line-break: anywhere;
-}
-
-.media ol p{
-	margin: 0;
-}
-.media ol time{
-	font-style: italic;
-}
-
-@media screen and (max-width: 720px) {
-	header,
-	footer{
-		padding: 1em 0;
-	}
-	section{
-		margin-top: 3em;
-	}
-}
-</style>
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="nulldesign.jp">
+<meta property="og:title" content="nulldesign.jp">
+<meta property="og:description" content="private works.">
+<meta property="og:url" content="https://nulldesign.jp/">
+<meta property="og:image" content="https://nulldesign.jp/ogp.png">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:locale:alternate" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preload" href="/assets/EBGaramond-Regular.subset.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/style.css?v=db62e2a8">
+<script src="/assets/main.js?v=a68b3075" defer></script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "ProfilePage",
-  "inLanguage": "ja",
-  "mainEntity": {
-    "@type": "Person",
-    "@id": "https://nulldesign.jp/#person",
-    "name": "小井 仁",
-    "alternateName": [
-      "Hiroshi KOI",
-      "Hiroshi",
-      "nulldesign"
-    ],
-    "jobTitle": "Design Engineer",
-    "description": "WebGLやThree.js、WebGPUを用いたインタラクティブ表現やデータ可視化を行うウェブクリエイティブデベロッパー・デザインエンジニア。",
-    "url": "https://nulldesign.jp",
-    "image": "https://nulldesign.jp",
-    "sameAs": [
-      "https://x.com/nulldesign",
-      "https://www.instagram.com/hrsk.log/"
-    ],
-    "address": {
-      "@type": "PostalAddress",
-      "addressRegion": "Tokyo",
-      "addressCountry": "JP"
-    },
-    "award": [
-      "The Webby Awards 2016 NETART Nominee",
-      "Yahoo! JAPAN internet creative award 2015 innovation: Silver",
-      "W3 Awards"
-    ],
-    "hasPart": [
-      {
-        "@type": "CreativeWork",
-        "name": "review",
-        "url": "https://nulldesign.jp"
-      },
-      {
-        "@type": "CreativeWork",
-        "name": "ambitious_kenya",
-        "url": "https://nulldesign.jp"
-      },
-      {
-        "@type": "CreativeWork",
-        "name": "SkyNet",
-        "url": "https://nulldesign.jp/skynet/"
-      },
-      {
-        "@type": "CreativeWork",
-        "name": "metrogram3d",
-        "url": "https://nulldesign.jp/metrogram3d/"
-      },
-      {
-        "@type": "CreativeWork",
-        "name": "metrogram",
-        "url": "https://nulldesign.jp/metrogram/"
-      },
-      {
-        "@type": "CreativeWork",
-        "name": ".log",
-        "url": "https://nulldesign.jp/log/"
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://nulldesign.jp/#website",
+      "url": "https://nulldesign.jp/",
+      "name": "nulldesign.jp",
+      "description": "Hiroshi KOI（小井 仁）のポートフォリオサイト。",
+      "inLanguage": [
+        "ja",
+        "en"
+      ],
+      "publisher": {
+        "@id": "https://nulldesign.jp/#person"
       }
-    ]
-  }
+    },
+    {
+      "@type": "ProfilePage",
+      "@id": "https://nulldesign.jp/#webpage",
+      "url": "https://nulldesign.jp/",
+      "name": "nulldesign.jp - Web Creative Developer / WebGL, WebGPU",
+      "inLanguage": "ja",
+      "isPartOf": {
+        "@id": "https://nulldesign.jp/#website"
+      },
+      "about": {
+        "@id": "https://nulldesign.jp/#person"
+      },
+      "mainEntity": {
+        "@id": "https://nulldesign.jp/#person"
+      }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://nulldesign.jp/#person",
+      "name": "小井 仁",
+      "alternateName": [
+        "Hiroshi KOI"
+      ],
+      "jobTitle": "Design Engineer",
+      "url": "https://nulldesign.jp/",
+      "sameAs": [
+        "https://x.com/nulldesign",
+        "https://www.instagram.com/hrsk.log/"
+      ],
+      "award": [
+        "The Webby Awards 2016 NETART Nominee",
+        "Yahoo! JAPAN internet creative award 2015 innovation: Silver",
+        "W3 Awards"
+      ]
+    }
+  ]
 }
 </script>
 <!-- Google tag (gtag.js) -->
@@ -219,124 +89,112 @@ section{
 </script> -->
 </head>
 <body>
-<div id="container">
-<main>
-<header>
+<a class="skip-link" href="#main">本文へスキップ</a>
+<header class="site-header">
 	<h1>nulldesign.jp</h1>
 	<p>Web Creative Developer.</p>
-	<nav><a href="/" class="current">JP</a> | <a href="/en">EN</a></nav>
+	<nav class="lang-nav" aria-label="言語"><a href="/" lang="ja" aria-current="page">JP</a><a href="/en/" lang="en" hreflang="en">EN</a></nav>
 </header>
-<section class="profile">
-	<h2>Profile</h2>
+<main id="main">
+<section class="profile" aria-labelledby="profile-title">
+	<h2 id="profile-title">Profile</h2>
 	<p>小井 仁 [ Hiroshi KOI ]</p>
 	<p>Design Engineer.</p>
 </section>
-	
-<section>
-<h2>Contents</h2>
+
+<section aria-labelledby="contents-title">
+<h2 id="contents-title">Contents</h2>
 <ul>
 	<li>
-		<a href="https://nulldesign.jp/review/">
-			review
-		</a>
+		<a href="https://nulldesign.jp/review/">review</a>
 	</li>
 	<li>
-		<a href="https://ijisosaku.com/ambitious_kenya/" target="_blank" rel="noopener">
-			ambitious_kenya
-		</a>
+		<a href="https://ijisosaku.com/ambitious_kenya/" target="_blank" rel="noopener">ambitious_kenya<span class="sr-only">（外部サイト）</span></a>
 	</li>
 	<li>
-		<a href="https://nulldesign.jp/skynet/">
-			SkyNet
-		</a>
+		<a href="https://nulldesign.jp/skynet/">SkyNet</a>
 	</li>
 	<li>
-		<a href="https://nulldesign.jp/metrogram3d/">
-			metrogram3d
-		</a>
+		<a href="https://nulldesign.jp/metrogram3d/">metrogram3d</a>
 	</li>
 	<li>
-		<a href="https://nulldesign.jp/metrogram/">
-			metrogram
-		</a>
+		<a href="https://nulldesign.jp/metrogram/">metrogram</a>
 	</li>
 	<li>
-		<a href="https://nulldesign.jp/log/">
-			<s>.log</s>
-		</a>
+		<a class="ended" href="https://nulldesign.jp/log/">.log</a>
 	</li>
 </ul>
-</section>
-
-<section class="info">
-<h3>.log</h3>
-<p>.log は、Flashを起点に始まった nulldesign.jp の、もう一つの側面を記録した個人プロジェクトです。2013年頃、Flashでの表現を続けていた制作者が、iPhoneの台頭とともに変化し始めたWebの技術環境に向き合い、JavaScriptを学ぶために制作した。企画、デザイン、実装、公開までを一人で手がけ、3か月から半年ほどにわたり継続的に制作した実験や習作を、ログとして残している。</p>
-<p>nulldesign.jpという屋号は、もともとFlash作品のために用意したものだった。.logの「another side of nulldesign.jp」という言葉には、その名義が本来担っていた表現とは異なる方向を探る、という意味が込められている。Flashを始める以前からフロントエンドの領域には飽きを感じており、再びその領域を深く扱うことになるとは考えていなかった。だからこそ本作は、正面から掲げる活動ではなく、あくまで片手間の学習と実験の場として、表側のnulldesign.jpと分けられた。</p>
-<p>当時のWebにおけるJavaScriptは、フォームの入力チェックや文字列操作など、補助的な用途で使われることが多かった。JavaScriptによってインタラクティブな表現をつくるという発想は、まだ一般的ではなかった。.logでは、そうした当時のマークアップエンジニアの役割や作法とは異なる立場から、JavaScriptと向き合う方法を試している。目指したのは、ページを機能的に補うためのコードではなく、触れ、動かし、見続けることのできるWebコンテンツだった。</p>
-<p>掲載されているのは、特定のデータセットを扱う作品ではない。その時々に思いついた断片や、Flashの時代に相談・引き合いを受けた表現をJavaScriptへ移植しながら考えたものが中心である。画像、図形、動き、空間、タイポグラフィなど、扱う題材は一定ではない。一つひとつの完成度をそろえるポートフォリオではなく、技術と表現を往復する学習の軌跡として、異なる試行を並べている。Canvasを用いた表現も、その過程で取り入れられた。</p>
-<p>開発はフレームワークを使わないバニラ環境で行い、レンタルサーバで公開した。私にとってフレームワークの習得は問題ではなく、重要な前提の一つは、スマートフォンでも見られ、扱えることでした。マウス操作を前提とする従来のWebに対し、スマートフォンではフリックをはじめとする直接的な操作が中心になる。.logでは、画面の向こうにあるWebを、指先で触れられるものとして設計することを試みた。これは単なる表示領域の対応ではなく、インタラクションの考え方そのものを変える実験でもあった。</p>
-<p>このサイトは積極的に外部公開するための作品集ではなく、自己学習と社内共有、そして評価のための場として機能していた。当時、社内のエンジニアからは驚きの反応が続いたという。.logは、Webの技術的な変化に追随するための記録であると同時に、Flash以後の表現を自分の手で探り直した時間のアーカイブである。</p>
-
-<h3>metrogram</h3>
-<p>metrogram は、東京の地下鉄を走る列車と、その運行が生み出す人の流れを、二次元の画面上に可視化する自主制作プロジェクトです。2014年の秋に制作し、同年9月に公開した。企画、デザイン、データ収集・整備、実装、公開まで、すべてを一人で手がけている。</p>
-<p>着想の背景には、社内の先達がFlashを使って制作していた地下鉄の2D表現があった。「作ろうと思えば作れる」という感覚は以前からあった一方、私的な時間で取り組むには、路線や時刻表を扱う作業は重い。関心を抱きながらも、制作に踏み出せずにいた。2014年9月には交通に関するオープンデータの公開が予定されていたが、本作は、その公開によって初めて実現したように見られることを避けたかった。そこで、既存のWeb上の情報をたどり、自らデータを収集するところから制作を始めた。</p>
-<p>作品の核にあるのは、日常的に利用していても全体像を把握しにくい東京の地下鉄を、一つの画面で眺める体験である。路線、駅、時刻表をもとに列車の位置を再現し、各駅停車、急行、特急などの種別によって、わずかに異なる表現を与えた。直接的な人流データを用いたわけではない。しかし、異なる速度や停車パターンをもつ列車が路線網を行き交う様子からは、都市のなかで人々が移動する気配が立ち上がる。この細かな差異に気づき、記事で取り上げたWebメディアもあり、制作者にとって印象的な反応となった。</p>
-<p>技術面では、Canvasを使ったことがなかったため、その習作として制作した。開発環境にはフレームワークを用いず、バニラJavaScriptを選択。データを画面上で扱う仕組みも含め、軽量で直接的な構成を目指した。公開にはレンタルサーバを利用している。作品のデータは2014年9月時点の情報に基づくため、現在の地下鉄の状況を正確に再現するものではない。リアルタイムの運行情報を示すサービスではなく、あらかじめ収集・整備した情報から、都市交通の時間的な構造を映し出すシミュレーションである。</p>
-<p>後に制作した3D版の方が大きく取り上げられた一方で、制作者自身は2D版により強い愛着を持っている。三次元化によって表現の幅は広がるが、人間が一度に受け取れる情報量には限りがある。ディスプレイ上では、情報が多すぎないことが、かえって対象の動きやリズムを捉えやすくする場合がある。metrogramは、地下鉄の複雑さをすべて説明するための作品ではない。必要な要素だけを静かに配置し、都市の流れを眺めるための視点をつくる試みである。</p>
-
-<h3>metrogram3D</h3>
-<p>metrogram3D は、東京の地下鉄を走る列車と、その周囲に生まれる人の流れを、三次元空間で眺めるための自主制作プロジェクトです。2014年の冬、一人で企画、デザイン、データ整備、実装までを手がけた。</p>
-<p>出発点となったのは、先行して制作していた2D版の metrogram だった。路線図の上で列車の動きを可視化したこの作品に対し、metrogram3Dでは「軸を一つ増やす」という割り切りを置いた。二次元で扱っていた時間と位置の関係を、奥行きをもつ空間へと展開する。技術的な挑戦を目的にしながらも、既存の表現をむやみに複雑化するのではなく、見慣れた地下鉄の運行を別の視点から見せることを目指した。</p>
-<p>東京の地下鉄を選んだ理由は、都市の日常を支える巨大で精密なシステムが、地上からはほとんど見えない場所で絶えず動いていることにある。駅と駅を結ぶ路線、時刻表に沿って移動する列車、それに伴って生じる人の気配。それらをひとつの視野に収めることで、個々の利用者には捉えにくい都市のリズムを浮かび上がらせようとした。</p>
-<p>本作が扱うのは、Web上で公開されていた地下鉄の時刻表を手作業で移植・編集したデータである。データの出所や構造は2D版と共通しており、現在地を取得するリアルタイムデータではない。あらかじめ整えた時刻表をもとに、指定された時刻の列車位置を再現するシミュレーションとして設計している。後年のオープンデータを前提とした制作ではなく、必要な情報を自ら読み取り、表現のためのデータへと組み替えることから始まった。</p>
-<p>実装にはWebGLとThree.jsを用いた。Three.jsの習作として取り組み、時刻表データはJavaScriptとして編集・利用している。固定JSONとして切り出す選択肢もあったが、データを扱う処理も含めてJavaScriptで完結させる方針を採った。開発環境はフレームワークに依存しないバニラJavaScript、公開先はレンタルサーバである。当時、勤務先でWebGLの研究開発領域が設けられたことも、時間外にこの技術へ取り組むテーマとして本作を選ぶ後押しになった。</p>
-<p>metrogram3Dが目指したのは、情報を受け取るためのWebコンテンツではない。操作や更新を求めるのではなく、スクリーンセーバのように、ただ流して眺めていられること。都市の見えない運行を静かに可視化し、Web上に「見るためだけの時間」をつくることが、この作品の中心にある。</p>
-
-
-<h3>SkyNet</h3>
-<p>SkyNet は、日本上空を行き交う航空機の動きを可視化する自主制作プロジェクトです。2018〜2019年頃に制作し、企画、デザイン、データの取得・整備、実装、公開までを一人で担当した。アクセスした時点のフライトスケジュールをもとに、空の状況をシミュレーションとして立ち上げる。</p>
-<p>制作の直接的な契機は、WebGLへの復帰だった。制作者は当時、研究開発部門でUnityを中心としたデジタル体験の制作に携わっていたが、Webの部署へ戻ることになった。WebGLの感覚を取り戻すためのリハビリテーションとして、何をつくるべきかを考えるなかでオープンデータを調べ、航空便のスケジュールを取得できることを知った。地上の交通に続き、今度は空を扱うことに関心が向いた。</p>
-<p>本作では、JALとANAの航空データを利用している。日ごとのフライトスケジュールを取得できることに加え、リアルタイム情報も利用可能であったことが、作品の可能性を感じさせた。あらかじめ与えられた時刻表を再生するだけではなく、取得時点に応じて変化する状況を扱えることが、空を題材にする理由の一つとなった。画面上では、航空便の動きを通して、ふだん目にすることのない日本上空の交通の密度や広がりを捉えることができる。</p>
-<p>一方で、空だけを示されても、見る人は位置関係を直感的に把握しにくい。そこで、日本の海岸線データを取得し、線分として描画している。海岸線全体を一つのMeshとして構成することで、細部までかたちを保ちながら、航空機と地上の位置関係を明確にした。情報を増やすための地図ではなく、空の動きを読むための基準として、地形の輪郭を置く設計である。</p>
-<p>技術にはWebGLとThree.jsを用いた。レンタルサーバ上で公開し、フレームワークは使用していない。前作と同じ手法を単に繰り返すことを避けるため、本作では時間速度を操作する機能と、ポストプロセッシングをどこまで重ねられるかという実験を組み込んだ。時間を加速・減速して眺めることで、個々の便の移動だけでなく、空全体の流れを異なる密度で観察できる。視覚効果のレイヤーもまた、データを説明するだけでなく、情報を体験として成立させるための試みだった。</p>
-<p>SkyNetは、時間と空間を扱う可視化の延長にある作品でもある。その一方で、同じ発想を重ねると、どうしても一人の思考の枠内でパターン化してしまうことも制作を通して意識された。類似した相談や制作機会が増えていくなかで、同じ問いに同じ表現で応じるのではなく、異なる出目を生み出す必要がある。本作は、航空データの可視化であると同時に、その次の表現を探すための実験でもあった。</p>
-
-<h3>ambitious_kenya</h3>
-<p>ambitious_kenya は、『鬼滅の刃』を題材にしたモバイル向けのインタラクティブコンテンツである。タイトルは「鬼滅の刃」のアナグラムに由来する。共同制作のなかで、テクニカルディレクションと実装を担当した。</p>
-<p>本作では、作品世界を支える「呼吸」と技、そして登場人物どうしの関係を、情報として説明するだけではなく、視覚的・体験的に捉えられる形へと置き換えた。多くのユーザーがモバイル端末から閲覧することを前提に、PC版を縮小するのではなく、スマートフォンに絞って体験を設計している。画面を指先で操作することによって、作品の要素や人物のつながりに触れ、読み進めることができる。</p>
-<p>限られた画面サイズと操作方法を制約ではなく表現の条件として捉え、人気作品の複雑な世界観を、モバイルならではの密度とリズムで再構成したプロジェクトです。</p>
-
-<h3>review</h3>
-<p>2026年発足。作品、WebGPU、AIなど、その時々に興味を持ったものを対象に、実際に触れながら考えていくコンテンツとなっている。<br />
+<div class="works">
+<article class="work" aria-labelledby="work-log">
+<h3 id="work-log" data-reveal>.log</h3>
+<p data-reveal>.log は、Flashを起点に始まった nulldesign.jp の、もう一つの側面を記録した個人プロジェクトです。2013年頃、Flashでの表現を続けていた制作者が、iPhoneの台頭とともに変化し始めたWebの技術環境に向き合い、JavaScriptを学ぶために制作した。企画、デザイン、実装、公開までを一人で手がけ、3か月から半年ほどにわたり継続的に制作した実験や習作を、ログとして残している。</p>
+<p data-reveal>nulldesign.jpという屋号は、もともとFlash作品のために用意したものだった。.logの「another side of nulldesign.jp」という言葉には、その名義が本来担っていた表現とは異なる方向を探る、という意味が込められている。Flashを始める以前からフロントエンドの領域には飽きを感じており、再びその領域を深く扱うことになるとは考えていなかった。だからこそ本作は、正面から掲げる活動ではなく、あくまで片手間の学習と実験の場として、表側のnulldesign.jpと分けられた。</p>
+<p data-reveal>当時のWebにおけるJavaScriptは、フォームの入力チェックや文字列操作など、補助的な用途で使われることが多かった。JavaScriptによってインタラクティブな表現をつくるという発想は、まだ一般的ではなかった。.logでは、そうした当時のマークアップエンジニアの役割や作法とは異なる立場から、JavaScriptと向き合う方法を試している。目指したのは、ページを機能的に補うためのコードではなく、触れ、動かし、見続けることのできるWebコンテンツだった。</p>
+<p data-reveal>掲載されているのは、特定のデータセットを扱う作品ではない。その時々に思いついた断片や、Flashの時代に相談・引き合いを受けた表現をJavaScriptへ移植しながら考えたものが中心である。画像、図形、動き、空間、タイポグラフィなど、扱う題材は一定ではない。一つひとつの完成度をそろえるポートフォリオではなく、技術と表現を往復する学習の軌跡として、異なる試行を並べている。Canvasを用いた表現も、その過程で取り入れられた。</p>
+<p data-reveal>開発はフレームワークを使わないバニラ環境で行い、レンタルサーバで公開した。私にとってフレームワークの習得は問題ではなく、重要な前提の一つは、スマートフォンでも見られ、扱えることでした。マウス操作を前提とする従来のWebに対し、スマートフォンではフリックをはじめとする直接的な操作が中心になる。.logでは、画面の向こうにあるWebを、指先で触れられるものとして設計することを試みた。これは単なる表示領域の対応ではなく、インタラクションの考え方そのものを変える実験でもあった。</p>
+<p data-reveal>このサイトは積極的に外部公開するための作品集ではなく、自己学習と社内共有、そして評価のための場として機能していた。当時、社内のエンジニアからは驚きの反応が続いたという。.logは、Webの技術的な変化に追随するための記録であると同時に、Flash以後の表現を自分の手で探り直した時間のアーカイブである。</p>
+</article>
+<article class="work" aria-labelledby="work-metrogram">
+<h3 id="work-metrogram" data-reveal>metrogram</h3>
+<p data-reveal>metrogram は、東京の地下鉄を走る列車と、その運行が生み出す人の流れを、二次元の画面上に可視化する自主制作プロジェクトです。2014年の秋に制作し、同年9月に公開した。企画、デザイン、データ収集・整備、実装、公開まで、すべてを一人で手がけている。</p>
+<p data-reveal>着想の背景には、社内の先達がFlashを使って制作していた地下鉄の2D表現があった。「作ろうと思えば作れる」という感覚は以前からあった一方、私的な時間で取り組むには、路線や時刻表を扱う作業は重い。関心を抱きながらも、制作に踏み出せずにいた。2014年9月には交通に関するオープンデータの公開が予定されていたが、本作は、その公開によって初めて実現したように見られることを避けたかった。そこで、既存のWeb上の情報をたどり、自らデータを収集するところから制作を始めた。</p>
+<p data-reveal>作品の核にあるのは、日常的に利用していても全体像を把握しにくい東京の地下鉄を、一つの画面で眺める体験である。路線、駅、時刻表をもとに列車の位置を再現し、各駅停車、急行、特急などの種別によって、わずかに異なる表現を与えた。直接的な人流データを用いたわけではない。しかし、異なる速度や停車パターンをもつ列車が路線網を行き交う様子からは、都市のなかで人々が移動する気配が立ち上がる。この細かな差異に気づき、記事で取り上げたWebメディアもあり、制作者にとって印象的な反応となった。</p>
+<p data-reveal>技術面では、Canvasを使ったことがなかったため、その習作として制作した。開発環境にはフレームワークを用いず、バニラJavaScriptを選択。データを画面上で扱う仕組みも含め、軽量で直接的な構成を目指した。公開にはレンタルサーバを利用している。作品のデータは2014年9月時点の情報に基づくため、現在の地下鉄の状況を正確に再現するものではない。リアルタイムの運行情報を示すサービスではなく、あらかじめ収集・整備した情報から、都市交通の時間的な構造を映し出すシミュレーションである。</p>
+<p data-reveal>後に制作した3D版の方が大きく取り上げられた一方で、制作者自身は2D版により強い愛着を持っている。三次元化によって表現の幅は広がるが、人間が一度に受け取れる情報量には限りがある。ディスプレイ上では、情報が多すぎないことが、かえって対象の動きやリズムを捉えやすくする場合がある。metrogramは、地下鉄の複雑さをすべて説明するための作品ではない。必要な要素だけを静かに配置し、都市の流れを眺めるための視点をつくる試みである。</p>
+</article>
+<article class="work" aria-labelledby="work-metrogram3d">
+<h3 id="work-metrogram3d" data-reveal>metrogram3D</h3>
+<p data-reveal>metrogram3D は、東京の地下鉄を走る列車と、その周囲に生まれる人の流れを、三次元空間で眺めるための自主制作プロジェクトです。2014年の冬、一人で企画、デザイン、データ整備、実装までを手がけた。</p>
+<p data-reveal>出発点となったのは、先行して制作していた2D版の metrogram だった。路線図の上で列車の動きを可視化したこの作品に対し、metrogram3Dでは「軸を一つ増やす」という割り切りを置いた。二次元で扱っていた時間と位置の関係を、奥行きをもつ空間へと展開する。技術的な挑戦を目的にしながらも、既存の表現をむやみに複雑化するのではなく、見慣れた地下鉄の運行を別の視点から見せることを目指した。</p>
+<p data-reveal>東京の地下鉄を選んだ理由は、都市の日常を支える巨大で精密なシステムが、地上からはほとんど見えない場所で絶えず動いていることにある。駅と駅を結ぶ路線、時刻表に沿って移動する列車、それに伴って生じる人の気配。それらをひとつの視野に収めることで、個々の利用者には捉えにくい都市のリズムを浮かび上がらせようとした。</p>
+<p data-reveal>本作が扱うのは、Web上で公開されていた地下鉄の時刻表を手作業で移植・編集したデータである。データの出所や構造は2D版と共通しており、現在地を取得するリアルタイムデータではない。あらかじめ整えた時刻表をもとに、指定された時刻の列車位置を再現するシミュレーションとして設計している。後年のオープンデータを前提とした制作ではなく、必要な情報を自ら読み取り、表現のためのデータへと組み替えることから始まった。</p>
+<p data-reveal>実装にはWebGLとThree.jsを用いた。Three.jsの習作として取り組み、時刻表データはJavaScriptとして編集・利用している。固定JSONとして切り出す選択肢もあったが、データを扱う処理も含めてJavaScriptで完結させる方針を採った。開発環境はフレームワークに依存しないバニラJavaScript、公開先はレンタルサーバである。当時、勤務先でWebGLの研究開発領域が設けられたことも、時間外にこの技術へ取り組むテーマとして本作を選ぶ後押しになった。</p>
+<p data-reveal>metrogram3Dが目指したのは、情報を受け取るためのWebコンテンツではない。操作や更新を求めるのではなく、スクリーンセーバのように、ただ流して眺めていられること。都市の見えない運行を静かに可視化し、Web上に「見るためだけの時間」をつくることが、この作品の中心にある。</p>
+</article>
+<article class="work" aria-labelledby="work-skynet">
+<h3 id="work-skynet" data-reveal>SkyNet</h3>
+<p data-reveal>SkyNet は、日本上空を行き交う航空機の動きを可視化する自主制作プロジェクトです。2018〜2019年頃に制作し、企画、デザイン、データの取得・整備、実装、公開までを一人で担当した。アクセスした時点のフライトスケジュールをもとに、空の状況をシミュレーションとして立ち上げる。</p>
+<p data-reveal>制作の直接的な契機は、WebGLへの復帰だった。制作者は当時、研究開発部門でUnityを中心としたデジタル体験の制作に携わっていたが、Webの部署へ戻ることになった。WebGLの感覚を取り戻すためのリハビリテーションとして、何をつくるべきかを考えるなかでオープンデータを調べ、航空便のスケジュールを取得できることを知った。地上の交通に続き、今度は空を扱うことに関心が向いた。</p>
+<p data-reveal>本作では、JALとANAの航空データを利用している。日ごとのフライトスケジュールを取得できることに加え、リアルタイム情報も利用可能であったことが、作品の可能性を感じさせた。あらかじめ与えられた時刻表を再生するだけではなく、取得時点に応じて変化する状況を扱えることが、空を題材にする理由の一つとなった。画面上では、航空便の動きを通して、ふだん目にすることのない日本上空の交通の密度や広がりを捉えることができる。</p>
+<p data-reveal>一方で、空だけを示されても、見る人は位置関係を直感的に把握しにくい。そこで、日本の海岸線データを取得し、線分として描画している。海岸線全体を一つのMeshとして構成することで、細部までかたちを保ちながら、航空機と地上の位置関係を明確にした。情報を増やすための地図ではなく、空の動きを読むための基準として、地形の輪郭を置く設計である。</p>
+<p data-reveal>技術にはWebGLとThree.jsを用いた。レンタルサーバ上で公開し、フレームワークは使用していない。前作と同じ手法を単に繰り返すことを避けるため、本作では時間速度を操作する機能と、ポストプロセッシングをどこまで重ねられるかという実験を組み込んだ。時間を加速・減速して眺めることで、個々の便の移動だけでなく、空全体の流れを異なる密度で観察できる。視覚効果のレイヤーもまた、データを説明するだけでなく、情報を体験として成立させるための試みだった。</p>
+<p data-reveal>SkyNetは、時間と空間を扱う可視化の延長にある作品でもある。その一方で、同じ発想を重ねると、どうしても一人の思考の枠内でパターン化してしまうことも制作を通して意識された。類似した相談や制作機会が増えていくなかで、同じ問いに同じ表現で応じるのではなく、異なる出目を生み出す必要がある。本作は、航空データの可視化であると同時に、その次の表現を探すための実験でもあった。</p>
+</article>
+<article class="work" aria-labelledby="work-ambitiouskenya">
+<h3 id="work-ambitiouskenya" data-reveal>ambitious_kenya</h3>
+<p data-reveal>ambitious_kenya は、『鬼滅の刃』を題材にしたモバイル向けのインタラクティブコンテンツである。タイトルは「鬼滅の刃」のアナグラムに由来する。共同制作のなかで、テクニカルディレクションと実装を担当した。</p>
+<p data-reveal>本作では、作品世界を支える「呼吸」と技、そして登場人物どうしの関係を、情報として説明するだけではなく、視覚的・体験的に捉えられる形へと置き換えた。多くのユーザーがモバイル端末から閲覧することを前提に、PC版を縮小するのではなく、スマートフォンに絞って体験を設計している。画面を指先で操作することによって、作品の要素や人物のつながりに触れ、読み進めることができる。</p>
+<p data-reveal>限られた画面サイズと操作方法を制約ではなく表現の条件として捉え、人気作品の複雑な世界観を、モバイルならではの密度とリズムで再構成したプロジェクトです。</p>
+</article>
+<article class="work" aria-labelledby="work-review">
+<h3 id="work-review" data-reveal>review</h3>
+<p data-reveal>2026年発足。作品、WebGPU、AIなど、その時々に興味を持ったものを対象に、実際に触れながら考えていくコンテンツとなっている。<br />
 新しい技術そのものを紹介することよりも、それによって生まれる体験や、ユーザーとの接点に興味があります。</p>
-<p>ここで扱うものは、必ずしも完成された作品とは限りません。試してみたもの、気になったもの、実際に触ってみて考えたものなど、その時点で興味を持ったものをそのまま扱います。ひらたく言えばWeb表現のためのリハビリと言えるかもしれません。</p>
-
+<p data-reveal>ここで扱うものは、必ずしも完成された作品とは限りません。試してみたもの、気になったもの、実際に触ってみて考えたものなど、その時点で興味を持ったものをそのまま扱います。ひらたく言えばWeb表現のためのリハビリと言えるかもしれません。</p>
+</article>
+</div>
 </section>
 
-<section>
-<h2>SNS</h2>
+<section aria-labelledby="sns-title">
+<h2 id="sns-title">SNS</h2>
 <ul>
 	<li>
-		<a href="https://x.com/nulldesign" target="_blank" rel="noopener">
-			X(Twitter）
-		</a>
+		<a href="https://x.com/nulldesign" target="_blank" rel="noopener">X(Twitter）<span class="sr-only">（外部サイト）</span></a>
 	</li>
 	<li>
-		<a href="https://www.instagram.com/hrsk.log/" target="_blank" rel="noopener">
-			Instagram
-		</a>
+		<a href="https://www.instagram.com/hrsk.log/" target="_blank" rel="noopener">Instagram<span class="sr-only">（外部サイト）</span></a>
 	</li>
 </ul>
 </section>
 
-<section>
-<h2>Awards</h2>
+<section aria-labelledby="awards-title">
+<h2 id="awards-title">Awards</h2>
 <ul>
 	<li>
-		<a href="https://winners.webbyawards.com/2016/websites-and-mobile-sites/general-desktop-mobile-sites/netart/160273/metrogram3d" target="_blank" rel="noopener">The Webby Awards 2016 NETART Nominee.</a>
+		<a href="https://winners.webbyawards.com/2016/websites-and-mobile-sites/general-desktop-mobile-sites/netart/160273/metrogram3d" target="_blank" rel="noopener">The Webby Awards 2016 NETART Nominee.<span class="sr-only">（外部サイト）</span></a>
 	</li>
 	<li>
-		<a href="https://compe.japandesign.ne.jp/result/yahoo-creative2015/" target="_blank" rel="noopener">Yahoo! JAPAN internet creative award 2015 innovation: Silver.</a>
+		<a href="https://compe.japandesign.ne.jp/result/yahoo-creative2015/" target="_blank" rel="noopener">Yahoo! JAPAN internet creative award 2015 innovation: Silver.<span class="sr-only">（外部サイト）</span></a>
 	</li>
 	<li>
 		W3 Awards
@@ -347,69 +205,66 @@ section{
 </ul>
 </section>
 
-<section>
-<h2>Selected / Features</h2>
+<section aria-labelledby="selected-title">
+<h2 id="selected-title">Selected / Features</h2>
 <ul>
 	<li>
-		<a href="https://experiments.withgoogle.com/metrogram3d" target="_blank" rel="noopener">Experiments with Google - metrogram3d</a>
+		<a href="https://experiments.withgoogle.com/metrogram3d" target="_blank" rel="noopener">Experiments with Google - metrogram3d<span class="sr-only">（外部サイト）</span></a>
 	</li>
 	<li>
-		<a href="https://experiments.withgoogle.com/metrogram3d" target="_blank" rel="noopener">Google Chrome Experiments</a>
+		<a href="https://experiments.withgoogle.com/metrogram3d" target="_blank" rel="noopener">Google Chrome Experiments<span class="sr-only">（外部サイト）</span></a>
 	</li>
 </ul>
 </section>
 
-<section class="media">
-<h2>Media Coverage & External Reviews</h2>
+<section class="media" aria-labelledby="media-title">
+<h2 id="media-title">Media Coverage & External Reviews</h2>
 <ol>
 <li>
 <time datetime="2018-07">2018/07</time>
 <p>Frontend de KANPAI! #4</p>
-<p><a href="https://design.dena.com/engineering/frokan-4" target="_blank" rel="noopener">https://design.dena.com/engineering/frokan-4</a></p>
+<p><a href="https://design.dena.com/engineering/frokan-4" target="_blank" rel="noopener">https://design.dena.com/engineering/frokan-4<span class="sr-only">（外部サイト）</span></a></p>
 </li>
 <li>
 <time datetime="2018-06">2018/06</time>
 <p>DIST.21 「クリエイティブコーディングで生み出すWebデザインの世界観」</p>
-<p><a href="https://dist.tokyo/details/dist-21" target="_blank" rel="noopener">https://dist.tokyo/details/dist-21</a></p>
+<p><a href="https://dist.tokyo/details/dist-21" target="_blank" rel="noopener">https://dist.tokyo/details/dist-21<span class="sr-only">（外部サイト）</span></a></p>
 </li>
 <li>
 <time datetime="2016">2016</time>
 <p>Yahoo! JAPAN インターネット クリエイティブアワード 2015</p>
-<p><a href="https://compe.japandesign.ne.jp/result/yahoo-creative2015/" target="_blank" rel="noopener">https://compe.japandesign.ne.jp/result/yahoo-creative2015/</a></p>
+<p><a href="https://compe.japandesign.ne.jp/result/yahoo-creative2015/" target="_blank" rel="noopener">https://compe.japandesign.ne.jp/result/yahoo-creative2015/<span class="sr-only">（外部サイト）</span></a></p>
 </li>
 <li>
 <time datetime="2016-06">2016/06</time>
 <p>泳ぎ寿司</p>
-<p><a href="https://www.g-mark.org/gallery/winners/9dd7df2a-803d-11ed-af7e-0242ac130002" target="_blank" rel="noopener">https://www.g-mark.org/gallery/winners/9dd7df2a-803d-11ed-af7e-0242ac130002</a></p>
+<p><a href="https://www.g-mark.org/gallery/winners/9dd7df2a-803d-11ed-af7e-0242ac130002" target="_blank" rel="noopener">https://www.g-mark.org/gallery/winners/9dd7df2a-803d-11ed-af7e-0242ac130002<span class="sr-only">（外部サイト）</span></a></p>
 </li>
 <li>
 <time datetime="2016">2016</time>
 <p>metrogram3D | Nominee | 2016 The Webby Awards</p>
-<p><a href="https://winners.webbyawards.com/2016/websites-and-mobile-sites/general-desktop-mobile-sites/netart/160273/metrogram3d" target="_blank" rel="noopener">https://winners.webbyawards.com/2016/websites-and-mobile-sites/general-desktop-mobile-sites/netart/160273/metrogram3d</a></p>
+<p><a href="https://winners.webbyawards.com/2016/websites-and-mobile-sites/general-desktop-mobile-sites/netart/160273/metrogram3d" target="_blank" rel="noopener">https://winners.webbyawards.com/2016/websites-and-mobile-sites/general-desktop-mobile-sites/netart/160273/metrogram3d<span class="sr-only">（外部サイト）</span></a></p>
 </li>
 <li>
 <time datetime="2015-06">2015/06</time>
 <p>動きのカガク展</p>
-<p><a href="https://www.tokyoartbeat.com/events/-/2015%2F0E5E" target="_blank" rel="noopener">https://www.tokyoartbeat.com/events/-/2015%2F0E5E</a></p>
+<p><a href="https://www.tokyoartbeat.com/events/-/2015%2F0E5E" target="_blank" rel="noopener">https://www.tokyoartbeat.com/events/-/2015%2F0E5E<span class="sr-only">（外部サイト）</span></a></p>
 </li>
 <li>
-<time datetime="2015-06">2015/12</time>
+<time datetime="2015-12">2015/12</time>
 <p>MoMa | Data visualization design and the art of depicting reality</p>
-<p><a href="https://www.moma.org/explore/inside_out/2015/12/10/data-visualization-design-and-the-art-of-depicting-reality/
-" target="_blank" rel="noopener">https://www.moma.org/explore/inside_out/2015/12/10/data-visualization-design-and-the-art-of-depicting-reality/
-</a></p>
+<p><a href="https://www.moma.org/explore/inside_out/2015/12/10/data-visualization-design-and-the-art-of-depicting-reality/" target="_blank" rel="noopener">https://www.moma.org/explore/inside_out/2015/12/10/data-visualization-design-and-the-art-of-depicting-reality/<span class="sr-only">（外部サイト）</span></a></p>
 </li>
 <li>
 <time datetime="2015">2015</time>
 <p>Experiments with Google</p>
-<p><a href="https://experiments.withgoogle.com/metrogram3d" target="_blank" rel="noopener">https://experiments.withgoogle.com/metrogram3d</a></p>
+<p><a href="https://experiments.withgoogle.com/metrogram3d" target="_blank" rel="noopener">https://experiments.withgoogle.com/metrogram3d<span class="sr-only">（外部サイト）</span></a></p>
 </li>
 </ol>
 </section>
-<footer>
+</main>
+<footer class="site-footer">
 <p>COPYRIGHT &copy;nulldesign.jp ALL RIGHTS RESERVED.</p>
 </footer>
-</main>
-<!-- #container --></div>
 </body>
 </html>
